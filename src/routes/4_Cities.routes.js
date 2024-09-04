@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createCity, deleteCityById, getCities, getCityById, updateCityById } from "../controllers/4_cities.controller.js";
+import { createCity, deleteCityById, getCities, getCityById, updateCityById } from "../controllers/4_Cities.controller.js";
 
 const router = Router();
 
