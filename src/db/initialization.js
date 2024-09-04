@@ -1,3 +1,4 @@
+//Solo ejecutar este archivo cuando se vaya a inicializar la base de datos
 import Rol from "../models/1_Rol.model.js";
 import Permission from "../models/2_Permission.model.js";
 import RolPermissions from "../models/3_RolPermissions.model.js";
@@ -20,7 +21,7 @@ import VerificationCode from "../models/19_VerificationCode.model.js";
 
 
 //Para Borrar y crear todo de nuevo
-/* import sequelize from "./sequelize.js";
+import sequelize from "./sequelize.js";
 await sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
 await sequelize.drop().then(() => {console.log("Tablas borradas");});
 await sequelize.query('SET FOREIGN_KEY_CHECKS = 1'); 
@@ -42,7 +43,7 @@ await CheckList.sync()
 await CheckListItem.sync()
 await Purchase.sync()
 await PurchaseDetail.sync()
-await VerificationCode.sync()  */
+await VerificationCode.sync() 
 
 //Relaciones necesarias  1:1  1:M  N:M
 import '../models/0_Asossiations.js'

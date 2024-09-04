@@ -21,7 +21,6 @@ import purchaseDetailsRoutes from './routes/17_PurchaseDetails.routes.js';
 import usersRoutes from './routes/18_Users.routes.js';
 import verificationCodesRoutes from './routes/19_VerificationCodes.routes.js'
 
-import './db/initialization.js';
 
 const app = express();
 
