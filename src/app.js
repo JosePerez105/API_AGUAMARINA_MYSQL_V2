@@ -1,5 +1,6 @@
 import express from 'express';
 import morgan from 'morgan';
+import cors from 'cors';
 
 import rolesRoutes from './routes/1_Roles.routes.js';
 import permissionsRoutes from './routes/2_permissions.routes.js';
@@ -23,6 +24,7 @@ import './db/initialization.js';
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 
