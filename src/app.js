@@ -3,7 +3,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 
 import rolesRoutes from './routes/1_Roles.routes.js';
-import permissionsRoutes from './routes/2_permissions.routes.js';
+import permissionsRoutes from './routes/2_Permissions.routes.js';
 import citiesRoutes from './routes/4_Cities.routes.js';
 import addressesRoutes from './routes/5_Addresses.routes.js';
 import categoriesRoutes from './routes/6_Categories.routes.js';
