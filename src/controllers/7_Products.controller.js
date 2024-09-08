@@ -97,6 +97,31 @@ export const updateProductById = async(req, res) => {
     };
 };
 
+export const changeStatusById = async(req, res) => {
+    const {id} = req.params;
+    try {
+        const product = await Products.findByPk(id);
+        const newStatus = product.status == 1 ?  0 : 1;
+        const patchedProduct = await Products.update({status : newStatus}, {where : {id_product : id}})
+        let isPatched;
+        patchedProduct <= 0 ? (isPatched = false) : (isPatched = true);
+        res.status(201).json({
+            ok : true,
+            status : 204,
+            body : {
+                patchedProduct,
+                isChanged
+            }
+        });
+    }  catch(err) {
+        res.status(400).json({
+            ok : false,
+            status : 400,
+            err
+        });
+    };
+};
+
 export const deleteProductById = async(req, res) => {
     const {id} = req.params;
     try {

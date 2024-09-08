@@ -1,4 +1,5 @@
 //Solo ejecutar este archivo cuando se vaya a inicializar la base de datos
+console.log("Cargando...")
 import Rol from "../models/1_Rol.model.js";
 import Permission from "../models/2_Permission.model.js";
 import RolPermissions from "../models/3_RolPermissions.model.js";

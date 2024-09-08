@@ -1,3 +1,4 @@
+import { json } from 'sequelize';
 import Categories from '../models/6_Category.model.js'
 
 export const getCategories = async(req, res) => {
@@ -58,8 +59,10 @@ export const updateCategoryById = async(req, res) => {
     const {id} = req.params;
     const {name} = req.body;
     try {
-        const [updatedCategory] = await Categories.update({name}, {where : {id_category : id}});
+        console.log("entra")
+        const updatedCategory = await Categories.update({name}, {where : {id_category : id}});
         let isUpdated;
+        console.log("siii")
         updatedCategory <= 0 ? (isUpdated = false) : (isUpdated = true);
         res.status(200).json({
             ok : true,
