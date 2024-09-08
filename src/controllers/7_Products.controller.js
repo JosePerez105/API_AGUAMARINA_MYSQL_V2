@@ -102,15 +102,16 @@ export const changeStatusById = async(req, res) => {
     try {
         const product = await Products.findByPk(id);
         const newStatus = product.status == 1 ?  0 : 1;
-        const patchedProduct = await Products.update({status : newStatus}, {where : {id_product : id}, benchmark: true});
+        const patchedProduct = await Products.update({status : newStatus}, {where : {id_product : id}});
         let isPatched;
         patchedProduct <= 0 ? (isPatched = false) : (isPatched = true);
+        console.log(newStatus)
         res.status(201).json({
             ok : true,
-            status : 204,
+            status : 201,
             body : {
                 patchedProduct,
-                isChanged
+                isPatched
             }
         });
     }  catch(err) {
