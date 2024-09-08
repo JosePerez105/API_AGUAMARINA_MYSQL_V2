@@ -8,3 +8,8 @@ export const DB_PORT = process.env.DB_PORT ;
 export const DB_USER = process.env.DB_USER ;
 export const DB_PASSWORD = process.env.DB_PASSWORD ;
 export const DB_DATABASE = process.env.DB_DATABASE ;
+
+export const PGHOST = process.env.PGHOST;
+export const PGDATABASE = process.env.PGHOST;
+export const PGUSER = process.env.PGUSER;
+export const PGPASSWORD = process.env.PGPASSWORD;

@@ -23,9 +23,7 @@ import VerificationCode from "../models/19_VerificationCode.model.js";
 
 //Para Borrar y crear todo de nuevo
 import sequelize from "./sequelize.js";
-await sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
 await sequelize.drop().then(() => {console.log("Tablas borradas");});
-await sequelize.query('SET FOREIGN_KEY_CHECKS = 1'); 
 await Rol.sync()
 await Permission.sync()
 await RolPermissions.sync()
@@ -48,10 +46,6 @@ await VerificationCode.sync()
 
 //Relaciones necesarias  1:1  1:M  N:M
 import '../models/0_Asossiations.js'
-
-
-
-
 
 const cantidadRoles = await Rol.findAndCountAll();
 if (cantidadRoles.count <= 0) {

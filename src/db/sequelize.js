@@ -1,12 +1,25 @@
 import { Sequelize } from "sequelize";
-import { DB_DATABASE, DB_HOST, DB_PASSWORD, DB_PORT, DB_USER } from "../config.js";
-const sequelize = new Sequelize(DB_DATABASE, DB_USER, DB_PASSWORD, {
+import { PGDATABASE, PGHOST, PGPASSWORD, PGUSER } from "../config.js";
+
+const sequelize = new Sequelize('postgresql://AguaMarinaDb_owner:XTJqzey2n9sb@ep-late-block-a580a0n7.us-east-2.aws.neon.tech/AguaMarinaDb?sslmode=require', {
+
+    port : 5432,
+    dialect : "postgres",
+    logging : false,
+    dialectOptions : {
+        ssl : {
+          require : true,
+          rejectUnauthorized : false
+        }
+      }
+}); 
+
+/* const sequelize = new Sequelize(DB_DATABASE, DB_USER, DB_PASSWORD, {
     host : DB_HOST,
     dialect : "mysql",
     port : DB_PORT,
     logging : false
-
-});
+}); */
 
 
 //Comandos para sincronizar la base de datos
