@@ -36,6 +36,24 @@ export const getCategoryById = async(req, res) => {
     };
 };
 
+export const getCategoryByName = async(req, res) => {
+    const {name} = req.body;
+    try {
+        const categories = await Categories.findAll({where : {name}});
+        res.status(200).json({
+            ok : true,
+            status : 200,
+            body : categories
+        });
+    } catch(err) {
+        res.status(400).json({
+            ok : false,
+            status : 400,
+            err
+        });
+    };
+};
+
 export const createCategory = async(req, res) => {
     const {name} = req.body;
     try {
