@@ -10,7 +10,7 @@ import categoriesRoutes from './routes/6_Categories.routes.js';
 import productsRoutes from './routes/7_Products.routes.js';
 import imagesRoutes from './routes/8_Images.routes.js';
 import statusRoutes from './routes/9_Status.routes.js';
-import reservationsRoutes from './routes/10_Reservation.routes.js';
+import reservationsRoutes from './routes/10_Reservations.routes.js';
 import reservationDetailsRoutes from './routes/11_ReservationDetails.routes.js';
 import rentsRoutes from './routes/12_Rents.routes.js';
 import paymentRegistersRoutes from './routes/13_PaymentRegisters.routes.js';
