@@ -1,4 +1,3 @@
-import sharp from 'sharp';
 import fs from 'fs';
 import cloudinary from '../utils/cloudinary.js';
 
@@ -124,49 +123,45 @@ export const deleteImageById = async(req, res) => {
     }
 };
 
-
 export const uploadImages = async (req, res) => {
-    try {
-      if (!req.file) {
-        return res.status(400).json({
-          ok: false,
-          status: 400,
-          message: 'No file uploaded'
-        });
-      }
-  
-      const optimizedImagePath = `./optimize/${req.file.filename}`;
-      await sharp(req.file.path).resize(300).toFile(optimizedImagePath);
-
-      cloudinary.uploader.upload(optimizedImagePath, function (err, result) {
-
-        fs.unlinkSync(req.file.path);
-        fs.unlinkSync(optimizedImagePath);
-  
-        if (err) {
-          console.error('Cloudinary upload error:', err);
-          return res.status(500).json({
-            ok: false,
-            status: 500,
-            message: 'Error al subir a Cloudinary',
-            error: err.message
-          });
-        }
-  
-        res.status(200).json({
-          ok: true,
-          status: 201,
-          message: 'Uploaded Image',
-          body: result.secure_url
-        });
-      });
-    } catch (err) {
-      console.error('Processing error:', err);
-      res.status(500).json({
+  try {
+    if (!req.file) {
+      return res.status(400).json({
         ok: false,
-        status: 500,
-        message: 'Error al procesar la imagen',
-        error: err.message
+        status: 400,
+        message: 'No file uploaded',
       });
     }
+
+    const imagePath = req.file.path;
+
+    cloudinary.uploader.upload(imagePath, function (err, result) {
+      fs.unlinkSync(imagePath);
+
+      if (err) {
+        console.error('Cloudinary upload error:', err);
+        return res.status(500).json({
+          ok: false,
+          status: 500,
+          message: 'Error al subir a Cloudinary',
+          error: err.message,
+        });
+      }
+
+      res.status(200).json({
+        ok: true,
+        status: 201,
+        message: 'Uploaded Image',
+        body: result.secure_url,
+      });
+    });
+  } catch (err) {
+    console.error('Processing error:', err);
+    res.status(500).json({
+      ok: false,
+      status: 500,
+      message: 'Error al procesar la imagen',
+      error: err.message,
+    });
+  }
 };
