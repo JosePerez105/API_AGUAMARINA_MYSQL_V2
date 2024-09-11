@@ -1,3 +1,7 @@
+import sharp from 'sharp';
+import fs from 'fs';
+import cloudinary from '../utils/cloudinary.js';
+
 import Images from '../models/8_Image.model.js'
 
 export const getImages = async(req, res) => {
@@ -118,4 +122,35 @@ export const deleteImageById = async(req, res) => {
             err
         });
     }
+};
+
+export const uploadImages = async (req, res) => {
+    try {
+      await sharp(req.file.path).resize(300).toFile(`./optimize/${req.file.filename}`);
+
+      cloudinary.uploader.upload(req.file.path, function (err, result) {
+        if (err) {
+          console.log(err);
+          return res.status(500).json({
+            success: false,
+            message: "Error al subir a Cloudinary",
+          });
+        }
+  
+        fs.unlinkSync(req.file.path);
+  
+        res.status(200).json({
+            ok : true,
+            status : 201,
+            message : "Uploaded Image",
+            body : result.secure_url
+        });
+      });
+    } catch(err) {
+        res.status(400).json({
+            ok : false,
+            status : 400,
+            err
+        });
+    };
 };
