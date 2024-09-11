@@ -124,33 +124,49 @@ export const deleteImageById = async(req, res) => {
     }
 };
 
+
 export const uploadImages = async (req, res) => {
     try {
-      await sharp(req.file.path).resize(300).toFile(`./optimize/${req.file.filename}`);
+      if (!req.file) {
+        return res.status(400).json({
+          ok: false,
+          status: 400,
+          message: 'No file uploaded'
+        });
+      }
+  
+      const optimizedImagePath = `./optimize/${req.file.filename}`;
+      await sharp(req.file.path).resize(300).toFile(optimizedImagePath);
 
-      cloudinary.uploader.upload(req.file.path, function (err, result) {
+      cloudinary.uploader.upload(optimizedImagePath, function (err, result) {
+
+        fs.unlinkSync(req.file.path);
+        fs.unlinkSync(optimizedImagePath);
+  
         if (err) {
-          console.log(err);
+          console.error('Cloudinary upload error:', err);
           return res.status(500).json({
-            success: false,
-            message: "Error al subir a Cloudinary",
+            ok: false,
+            status: 500,
+            message: 'Error al subir a Cloudinary',
+            error: err.message
           });
         }
   
-        fs.unlinkSync(req.file.path);
-  
         res.status(200).json({
-            ok : true,
-            status : 201,
-            message : "Uploaded Image",
-            body : result.secure_url
+          ok: true,
+          status: 201,
+          message: 'Uploaded Image',
+          body: result.secure_url
         });
       });
-    } catch(err) {
-        res.status(400).json({
-            ok : false,
-            status : 400,
-            err
-        });
-    };
+    } catch (err) {
+      console.error('Processing error:', err);
+      res.status(500).json({
+        ok: false,
+        status: 500,
+        message: 'Error al procesar la imagen',
+        error: err.message
+      });
+    }
 };
