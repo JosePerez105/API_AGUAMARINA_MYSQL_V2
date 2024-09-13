@@ -56,7 +56,7 @@ export const getImagesByProduct = async(req, res) => {
     }
 };
 
-export const createImage = async(req, res) => {
+/* export const createImage = async(req, res) => {
     const {id_product, path_image} = req.body;
     try {
         const createdImage = await Images.create({id_product, path_image});
@@ -73,7 +73,34 @@ export const createImage = async(req, res) => {
             err
         });
     };
+}; */
+
+export const createImage = async (req, res) => {
+    const arrayImages = req.body;
+    try {
+        const createdImages = await Promise.all(
+            arrayImages.map(async (image) => {
+                const { id_product, path_image } = image;
+                return await Images.create({ id_product, path_image });
+            })
+        );
+
+        res.status(201).json({
+            ok: true,
+            status: 201,
+            message: "Images created",
+            body: createdImages
+        });
+    } catch (err) {
+        res.status(400).json({
+            ok: false,
+            status: 400,
+            message: "Error al crear las imagenes",
+            err
+        });
+    }
 };
+
 
 export const updateImageById = async(req, res) => {
     const {id} = req.params;
