@@ -4,7 +4,7 @@ import { validatePermission, validateToken } from "../controllers/20_Authenticat
 
 const router = Router();
 
-router.get('/products', [validateToken, /*validatePermission('Ver Productos')*/], getProducts); // Obtener todo (req.cookie.jwt_ag)
+router.get('/products', [/*validateToken, validatePermission('Ver Productos')*/], getProducts); // Obtener todo (req.cookie.jwt_ag)
 router.get('/products/:id', [], getProductById); // Obtener por Id (req.params)
 router.get('/products_category/:id', [], getProductsByCategory) // Obtener por Categoria (req.params)
 router.post('/products', [], createProduct); // Crear (req.body)
