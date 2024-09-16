@@ -35,7 +35,7 @@ app.options('/', (req, res) => {
 });
 
 const corsOptions = {
-    origin: 'http://frontend-domain.com',
+    origin: 'http://localhost:3000/',
     credentials: true
 };
 
