@@ -21,3 +21,5 @@ export const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME || 'dyget
 export const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY || '755195246975729'
 export const CLOUDINARY_SECRET_KEY = process.env.CLOUDINARY_SECRET_KEY || 'S6sF1Uww5dq38gdcRHUBzJuNJl8'
 
+//Variables Secretas JWT
+export const SECRET_JWT = process.env.SECRET_JWT || "ClaveSecreta"

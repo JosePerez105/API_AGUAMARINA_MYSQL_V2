@@ -102,19 +102,3 @@ export const deleteRolById = async(req, res) => {
         });
     }
 };
-
-export const addPermissions = async(req, res) => {
-    const {id_rol, id_permission} = req.body;
-    try {
-        const rol = await Roles.findByPk(id_rol);
-    const permission = await Permissions.findByPk(id_permission);
-    await rol.addPermissions(permission);
-    } catch(err) {
-        res.status(400).json({
-            ok : false,
-            status : 400,
-            err
-        });
-    };
-    
-};

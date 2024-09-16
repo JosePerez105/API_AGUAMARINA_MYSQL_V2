@@ -24,7 +24,4 @@ Rol.init({
     tableName: "Roles"
     });
 
-
-
-
 export default Rol;

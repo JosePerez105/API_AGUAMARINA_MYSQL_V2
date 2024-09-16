@@ -1,9 +1,10 @@
 import { Router } from "express";
 import { changeStatusById, createProduct, deleteProductById, getProductById, getProducts, getProductsByCategory, updateProductById } from "../controllers/7_Products.controller.js";
+import { validatePermission, validateToken } from "../controllers/20_Authentications.controller.js";
 
 const router = Router();
 
-router.get('/products', [], getProducts); // Obtener todo
+router.get('/products', [validateToken, validatePermission('Ver Productos')], getProducts); // Obtener todo (req.cookie.jwt_ag)
 router.get('/products/:id', [], getProductById); // Obtener por Id (req.params)
 router.get('/products_category/:id', [], getProductsByCategory) // Obtener por Categoria (req.params)
 router.post('/products', [], createProduct); // Crear (req.body)
