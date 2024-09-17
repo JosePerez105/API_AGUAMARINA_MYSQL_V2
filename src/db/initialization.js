@@ -49,7 +49,8 @@ import '../models/0_Asossiations.js'
 
 const cantidadRoles = await Rol.findAndCountAll();
 if (cantidadRoles.count <= 0) {
-    await Rol.create({name : "Admin", description : "Tiene TODOS los permisos dentro del aplicativo", color : "#53bce5"}).then(() => {console.log("Rol Creado Correctamente");});
+    await Rol.create({name : "Admin", description : "Tiene TODOS los permisos dentro del aplicativo", color : "#53bce5"}).then(() => {console.log("Rol Admin Creado Correctamente");});
+    await Rol.create({name: "Cliente", description: "Solo puede ver ciertas cosas de cliente", color: "#c3c"}).then(() => {console.log("Rol Cliente Creado Correctamente");});
 };
 
 const cantidadPermisos = await Permission.findAndCountAll();
@@ -91,6 +92,8 @@ if (cantidadRolPermissions.count <= 0) {
     allPermissions.map(async(per) => await RolPermissions.create({id_rol : 1, id_permission : per.id_permission}));
     console.log("Se Añadido todos los permisos al Rol de Admin");
 };
+
+
 
 
 
