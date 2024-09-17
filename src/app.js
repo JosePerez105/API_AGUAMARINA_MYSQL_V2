@@ -34,12 +34,13 @@ app.options('/', (req, res) => {
     res.sendStatus(204);
 });
 
-const corsOptions = {
+app.use(cors({
     origin: 'http://localhost:3000',
-    credentials: true
-};
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials : true
+  }));
 
-app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
