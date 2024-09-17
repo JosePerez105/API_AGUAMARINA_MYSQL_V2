@@ -36,9 +36,9 @@ export const getPermissionById = async(req, res) => {
 };
 
 export const createPermission = async(req, res) => {
-    const {name, description} = req.body;
+    const {name, description, area} = req.body;
     try {
-        const createdPermission = await Permissions.create({name, description});
+        const createdPermission = await Permissions.create({name, description, area});
         res.status(201).json({
             ok : true,
             status : 201,
@@ -56,9 +56,9 @@ export const createPermission = async(req, res) => {
 
 export const updatePermissionById = async(req, res) => {
     const {id} = req.params;
-    const {name, description} = req.body;
+    const {name, description, area} = req.body;
     try {
-        const [updatedPermission] = await Permissions.update({name, description}, {where : {id_permission : id}});
+        const [updatedPermission] = await Permissions.update({name, description, area}, {where : {id_permission : id}});
         let isUpdated;
         updatedPermission <= 0 ? (isUpdated = false) : (isUpdated = true);
         res.status(200).json({

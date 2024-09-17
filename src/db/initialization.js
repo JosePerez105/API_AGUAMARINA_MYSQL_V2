@@ -49,37 +49,37 @@ import '../models/0_Asossiations.js'
 
 const cantidadRoles = await Rol.findAndCountAll();
 if (cantidadRoles.count <= 0) {
-    await Rol.create({name : "Admin", description : "Tiene TODOS los permisos dentro del aplicativo"}).then(() => {console.log("Rol Creado Correctamente");});
+    await Rol.create({name : "Admin", description : "Tiene TODOS los permisos dentro del aplicativo", color : "#53bce5"}).then(() => {console.log("Rol Creado Correctamente");});
 };
 
 const cantidadPermisos = await Permission.findAndCountAll();
 if (cantidadPermisos.count <= 0) {
     const Permissions = [
-        {name : "Crear Usuario", description : "Puede crear Usuarios personalizados"}, //1
-        {name : "Actualizar Usuario", description : "Puede actualizar datos del Usuario"}, //2
-        {name : "Cambiar Estados Usuarios", description : "Puede habilitar y deshabilitar los Usuarios"}, //3
-        {name : "Ver Usuarios", description : "Puede visualizar todos los Usuarios"}, //4
-        {name : "Eliminar Usuarios", description : "Puede eliminar Usuarios"}, //5
-        {name : "Crear Roles", description : "Puede crear Roles personalizados"}, //6
-        {name : "Actualizar Roles", description : "Puede cambiar los datos de los Roles"}, //7
-        {name : "Ver Roles", description : "Puede visualizar todos los Roles"}, //8
-        {name : "Eliminar Roles", description : "Puede eliminar Roles"}, //9
-        {name : "Gestionar Permisos", description : "Puede agregar y quitar Permisos a los Roles"}, //10
-        {name : "Crear Productos", description : "Puede crear Productos personalizados"}, //11
-        {name : "Actualizar Productos", description : "Puede actualizar datos de los Productos"}, //12
-        {name : "Cambiar Estado Productos", description : "Puede habilitar y deshabilitar los Productos"}, //13
-        {name : "Ver Productos", description : "Puede visualizar los Productos (NO confundir con ver catálogo)"}, //14
-        {name : "Eliminar Productos", description : "Puede eliminar Productos"}, //15
-        {name : "Generar Reserva", description : "Puede crear Reservas personalizadas"}, //16
-        {name : "Cambiar Estado Reserva", description : "Puede cambiar el estado de las Reservas por un estado personalizado"}, //17
-        {name : "Ver Mis Reservas", description : "Puede visualizar las Reservas hechas por ese Usuario"}, //18
-        {name : "Ver Reservas", description : "Puede visualizar todas las Reservas"}, //19
-        {name : "Ver Mis Alquileres", description : "Puede visualizar los Alquileres hechos por ese Usuario"}, //20
-        {name : "Ver Alquileres", description : "Puede visualizar todos los Alquileres"}, //21
-        {name : "Crear Registros De Pago", description : "Puede crear Registros de Pago personalizados"}, //22
-        {name : "Actualizar Registros De Pago", description : "Puede actualizar datos de los Registros de Pago"}, //23
-        {name : "Eliminar Registros De Pago", description : "Puede eliminar Registros de Pago"}, //24
-        {name : "Ver Agenda", description : "Puede visualizar la información de la agenda"}, //25
+        {name : "Crear Usuario", description : "Puede crear Usuarios personalizados", area: "Usuarios"}, //1
+        {name : "Actualizar Usuario", description : "Puede actualizar datos del Usuario", area: "Usuarios"}, //2
+        {name : "Cambiar Estados Usuarios", description : "Puede habilitar y deshabilitar los Usuarios", area: "Usuarios"}, //3
+        {name : "Ver Usuarios", description : "Puede visualizar todos los Usuarios", area: "Usuarios"}, //4
+        {name : "Eliminar Usuarios", description : "Puede eliminar Usuarios", area: "Usuarios"}, //5
+        {name : "Crear Roles", description : "Puede crear Roles personalizados", area: "Roles"}, //6
+        {name : "Actualizar Roles", description : "Puede cambiar los datos de los Roles", area: "Roles"}, //7
+        {name : "Ver Roles", description : "Puede visualizar todos los Roles", area: "Roles"}, //8
+        {name : "Eliminar Roles", description : "Puede eliminar Roles", area: "Roles"}, //9
+        {name : "Gestionar Permisos", description : "Puede agregar y quitar Permisos a los Roles", area: "Roles"}, //10
+        {name : "Crear Productos", description : "Puede crear Productos personalizados", area: "Productos"}, //11
+        {name : "Actualizar Productos", description : "Puede actualizar datos de los Productos", area: "Productos"}, //12
+        {name : "Cambiar Estado Productos", description : "Puede habilitar y deshabilitar los Productos", area: "Productos"}, //13
+        {name : "Ver Productos", description : "Puede visualizar los Productos (NO confundir con ver catálogo)", area: "Productos"}, //14
+        {name : "Eliminar Productos", description : "Puede eliminar Productos", area: "Productos"}, //15
+        {name : "Generar Reserva", description : "Puede crear Reservas personalizadas", area: "Reservas"}, //16
+        {name : "Cambiar Estado Reserva", description : "Puede cambiar el estado de las Reservas por un estado personalizado", area: "Reservas"}, //17
+        {name : "Ver Mis Reservas", description : "Puede visualizar las Reservas hechas por ese Usuario", area: "Reservas"}, //18
+        {name : "Ver Reservas", description : "Puede visualizar todas las Reservas", area: "Reservas"}, //19
+        {name : "Ver Mis Alquileres", description : "Puede visualizar los Alquileres hechos por ese Usuario", area: "Alquileres"}, //20
+        {name : "Ver Alquileres", description : "Puede visualizar todos los Alquileres", area: "Alquileres"}, //21
+        {name : "Crear Registros De Pago", description : "Puede crear Registros de Pago personalizados", area: "Resgistros de Pago"}, //22
+        {name : "Actualizar Registros De Pago", description : "Puede actualizar datos de los Registros de Pago", area: "Resgistros de Pago"}, //23
+        {name : "Eliminar Registros De Pago", description : "Puede eliminar Registros de Pago", area: "Resgistros de Pago"}, //24
+        {name : "Ver Agenda", description : "Puede visualizar la información de la agenda", area: "Agenda"}, //25
     ];
     Permissions.map(async(per) => await Permission.create(per));
     console.log("Todos los Permisos Creados")
