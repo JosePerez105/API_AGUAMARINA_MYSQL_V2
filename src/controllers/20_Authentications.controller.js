@@ -10,16 +10,18 @@ export const validateLogin = async(req, res) => {
     try {
         const users = await Users.findAll({where : {mail}})
         if (users.length <= 0) {
-            return res.status(400).json({
+            return res.status(200).json({
                 message : "No existe una cuenta con este correo",
+                logged : false
             })
         }
         const user = users[0]
         const active = user.status
 
         if(!active) {
-            return res.status(400).json({
+            return res.status(200).json({
                 message : "No puedes iniciar sesión ahora, tu usuario está Inhabilitado",
+                logged : false
             })
         }
         const isMatch =  await bcrypt.compare(passwordStr, user.password)
@@ -44,12 +46,13 @@ export const validateLogin = async(req, res) => {
             res.status(200).header('authorization', accessToken).json({
                     message : "Inicio de Sesión Correcto",
                     data : payload,
-                    isLogin : true
+                    logged : true
                 }
             )
         } else {
             await res.status(400).json({
                 message : "Contraseña Incorrecta",
+                logged : false
             })
         }
     } catch(err) {
