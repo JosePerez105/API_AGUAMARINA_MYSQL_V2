@@ -15,6 +15,13 @@ export const validateLogin = async(req, res) => {
             })
         }
         const user = users[0]
+        const active = user.status
+
+        if(!active) {
+            return res.status(400).json({
+                message : "No puedes iniciar sesión ahora, tu usuario está Inhabilitado",
+            })
+        }
         const isMatch =  await bcrypt.compare(passwordStr, user.password)
         if (isMatch) {
             const payload = {
