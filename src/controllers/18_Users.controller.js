@@ -55,7 +55,7 @@ export const getUserByMail = async(req, res) => {
 };
 
 export const createUser = async(req, res) => {
-    const {names, lastnames, dni, mail, password, phone_number, id_rol = 2, status} = req.body;
+    const {names, lastnames, dni, mail, password, phone_number, id_rol = 2, status = true} = req.body;
     try {
         const salt = await bcrypt.genSalt(10);
         const passwordBcrypt = await bcrypt.hash(password.toString(), salt);
