@@ -104,6 +104,16 @@ export const changeStatusById = async(req, res) => {
     const {id} = req.params;
     try {
         const user = await Users.findByPk(id);
+        if (user.id == 1) {
+            return res.status(201).json({
+                ok : false,
+                status : 201,
+                body : {
+                    patchedUser : 0,
+                    isPatched : false
+                }
+            })
+        }
         const newStatus = user.status == 1 ? 0 : 1;
         const patchedUser = await Users.update({status : newStatus}, {where : {id_user : id}});
         let isPatched;

@@ -1,5 +1,6 @@
 //Solo ejecutar este archivo cuando se vaya a inicializar la base de datos
 console.log("Cargando...")
+import bcrypt from "bcrypt"
 import Rol from "../models/1_Rol.model.js";
 import Permission from "../models/2_Permission.model.js";
 import RolPermissions from "../models/3_RolPermissions.model.js";
@@ -77,9 +78,9 @@ if (cantidadPermisos.count <= 0) {
         {name : "Ver Reservas", description : "Puede visualizar todas las Reservas", area: "Reservas"}, //19
         {name : "Ver Mis Alquileres", description : "Puede visualizar los Alquileres hechos por ese Usuario", area: "Alquileres"}, //20
         {name : "Ver Alquileres", description : "Puede visualizar todos los Alquileres", area: "Alquileres"}, //21
-        {name : "Crear Registros De Pago", description : "Puede crear Registros de Pago personalizados", area: "Resgistros de Pago"}, //22
-        {name : "Actualizar Registros De Pago", description : "Puede actualizar datos de los Registros de Pago", area: "Resgistros de Pago"}, //23
-        {name : "Eliminar Registros De Pago", description : "Puede eliminar Registros de Pago", area: "Resgistros de Pago"}, //24
+        {name : "Crear Registros De Pago", description : "Puede crear Registros de Pago personalizados", area: "Registros de Pago"}, //22
+        {name : "Actualizar Registros De Pago", description : "Puede actualizar datos de los Registros de Pago", area: "Registros de Pago"}, //23
+        {name : "Eliminar Registros De Pago", description : "Puede eliminar Registros de Pago", area: "Registros de Pago"}, //24
         {name : "Ver Agenda", description : "Puede visualizar la información de la agenda", area: "Agenda"}, //25
     ];
     Permissions.map(async(per) => await Permission.create(per));
@@ -93,8 +94,12 @@ if (cantidadRolPermissions.count <= 0) {
     console.log("Se Añadido todos los permisos al Rol de Admin");
 };
 
-
-
+const cantidadUsers = await User.findAndCountAll();
+if (cantidadUsers.count <= 0) {
+    const salt = await bcrypt.genSalt(10)
+    const password = await bcrypt.hash("12345678", salt);
+    await User.create({names : "Admin", lastnames: "AguaMarina", dni: "12345678", mail: "aguamarina.alquilermobiliario@gmail.com", password, phone_number: "3026551188", id_rol: 1}).then(() => {console.log("Usuario Admin AguaMarina Creado Correctamente");});
+};
 
 
 console.log("Estamos Ready en el Backend");
