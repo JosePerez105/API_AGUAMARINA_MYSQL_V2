@@ -55,10 +55,11 @@ export const createRol = async(req, res) => {
             body : createdRol
         });
     } catch(err) {
-        res.status(400).json({
+        res.status(200).json({
             ok : false,
             status : 400,
-            err
+            err,
+            permissions
         });
     };
 };
