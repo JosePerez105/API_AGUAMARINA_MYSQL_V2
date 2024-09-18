@@ -38,9 +38,9 @@ export const getRolById = async(req, res) => {
 
 export const createRol = async(req, res) => {
     const {name, description, color, permissions = []} = req.body;
-    if (!permissions) {
+    if (permissions.length <= 0) {
         return res.status(400).json({
-            ok : flase,
+            ok : false,
             status : 400,
             message : "Sin Permisos",
         });
