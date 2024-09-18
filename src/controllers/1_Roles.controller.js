@@ -1,5 +1,4 @@
 import Roles from "../models/1_Rol.model.js";
-import Permissions from "../models/2_Permission.model.js";
 import RolPermissions from "../models/3_RolPermissions.model.js";
 
 export const getRoles = async(req, res) => {
