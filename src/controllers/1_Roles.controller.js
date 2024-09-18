@@ -37,14 +37,7 @@ export const getRolById = async(req, res) => {
 };
 
 export const createRol = async(req, res) => {
-    const {name, description, color, permissions = []} = req.body;
-    if (permissions.length <= 0) {
-        return res.status(400).json({
-            ok : false,
-            status : 400,
-            message : "Sin Permisos",
-        });
-    }
+    const {name, description, color, permissions} = req.body;
     try {
         const createdRol = await Roles.create({name, description, color});
         permissions.map(async(per) => await RolPermissions.create({id_rol : createdRol.id_rol, id_permission : per}));
