@@ -20,11 +20,6 @@ export const getPermissionsByRol = async(req, res) => {
     };
 };
 
-
-
-
-
-
 export const getNamesPermissionsByRolFunc = async (id) => {
     try {
         const rolPermissions = await RolPermissions.findAll({

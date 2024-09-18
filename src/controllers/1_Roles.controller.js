@@ -1,5 +1,6 @@
 import Roles from "../models/1_Rol.model.js";
 import Permissions from "../models/2_Permission.model.js";
+import RolPermissions from "../models/3_RolPermissions.model.js";
 
 export const getRoles = async(req, res) => {
     try {
@@ -37,9 +38,17 @@ export const getRolById = async(req, res) => {
 };
 
 export const createRol = async(req, res) => {
-    const {name, description, color} = req.body;
+    const {name, description, color, permissions = []} = req.body;
+    if (!permissions) {
+        return res.status(400).json({
+            ok : flase,
+            status : 400,
+            message : "Sin Permisos",
+        });
+    }
     try {
         const createdRol = await Roles.create({name, description, color});
+        permissions.map(async(per) => await RolPermissions.create({id_rol : createdRol.id_rol, id_permission : per.id_permission}));
         res.status(201).json({
             ok : true,
             status : 201,

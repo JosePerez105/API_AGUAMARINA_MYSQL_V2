@@ -41,8 +41,9 @@ export const validateLogin = async(req, res) => {
             }
             const accessToken = generateAccessToken(payload)
             res.cookie('jwt_ag', accessToken, {
-                httpOnly: true,
+                //httpOnly: true,
                 maxAge: 12 * 60 * 60 * 1000,
+                secure: true,
                 sameSite: 'None'
             }) 
             res.status(200).header('authorization', accessToken).json({
