@@ -47,7 +47,7 @@ export const createRol = async(req, res) => {
     }
     try {
         const createdRol = await Roles.create({name, description, color});
-        permissions.map(async(per) => await RolPermissions.create({id_rol : createdRol.id_rol, id_permission : per.id_permission}));
+        permissions.map(async(per) => await RolPermissions.create({id_rol : createdRol.id_rol, id_permission : per}));
         res.status(201).json({
             ok : true,
             status : 201,
