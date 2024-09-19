@@ -131,3 +131,11 @@ export const validateLogout = async(req, res) => {
         });
     }
 };
+
+export const checkAuth = async(req, res) => {
+    if (req.cookie.jwt_ag) {
+        res.json({logged : true});
+    } else {
+        res.json({logged : false})
+    }
+};
