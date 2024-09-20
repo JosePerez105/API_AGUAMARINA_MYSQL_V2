@@ -54,9 +54,9 @@ export const getReservationsByUser = async(req, res) => {
 };
 
 export const createReservation = async(req, res) => {
-    const {id_user, start_date, end_date, adress, city, neighborhood, /*id_status*/} = req.body;
+    const {id_user, start_date, end_date, address, city, neighborhood, id_status} = req.body;
     try {
-        const createdReservation = await Reservations.create({id_user, start_date, end_date, adress, city, neighborhood, /*id_status*/});
+        const createdReservation = await Reservations.create({id_user, start_date, end_date, address, city, neighborhood, id_status});
         res.status(201).json({
             ok : true,
             status : 201,
