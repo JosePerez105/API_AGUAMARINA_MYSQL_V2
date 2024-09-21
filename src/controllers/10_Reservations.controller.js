@@ -1,5 +1,6 @@
 import Reservations from '../models/10_Reservation.model.js'
 import Details from '../models/11_ReservationDetail.model.js'
+import Products from '../models/7_Product.model.js';
 
 export const getReservations = async(req, res) => {
     const reservations = await Reservations.findAll();
@@ -61,12 +62,14 @@ export const createReservation = async(req, res) => {
         const id_reservation = createdReservation.id_reservation;
 
         const detailsList = details.map(async (detail) => {
+            const productDetail = await Products.findByPk(detail.id_product);
+
             const createdDetail = await Details.create({
                 id_reservation : id_reservation, 
                 id_product : detail.id_product,
                 quantity : detail.quantity,
-                unit_price : detail.unit_price,
-                total_price : (detail.quantity * detail.unit_price)
+                unit_price : productDetail.price,
+                total_price : (detail.quantity * productDetail.price)
             })
             return createdDetail;
         })
