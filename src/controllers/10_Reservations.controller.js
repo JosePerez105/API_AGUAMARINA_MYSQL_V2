@@ -58,7 +58,7 @@ export const createReservation = async(req, res) => {
     const {id_user, start_date, end_date, address, city, neighborhood, status, details=[]} = req.body;
     try {
         const createdReservation = await Reservations.create({id_user, start_date, end_date, address, city, neighborhood, status});
-        const id_reservation = createReservation.id_reservation;
+        const id_reservation = createdReservation.id_reservation;
 
         const detailsList = details.map(async (detail) => {
             const createdDetail = await Details.create({
