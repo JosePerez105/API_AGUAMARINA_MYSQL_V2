@@ -43,7 +43,7 @@ export const validateLogin = async(req, res) => {
             res.cookie('jwt_ag', accessToken, {
                 //httpOnly: true,
                 maxAge: 12 * 60 * 60 * 1000,
-                sameSite: 'None'
+                sameSite: 'Lax'
             }) 
             res.status(200).header('authorization', accessToken).json({
                     message : "Inicio de Sesión Correcto",
