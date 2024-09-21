@@ -21,9 +21,9 @@ Rent.init({
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    id_status: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+    status: {
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     date_start: {
         type: DataTypes.DATE,

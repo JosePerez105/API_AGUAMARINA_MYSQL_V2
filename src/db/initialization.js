@@ -9,7 +9,6 @@ import Address from "../models/5_Address.model.js";
 import Category from "../models/6_Category.model.js";
 import Product from "../models/7_Product.model.js";
 import Image from "../models/8_Image.model.js";
-import Status from "../models/9_Status.model.js";
 import Reservation from "../models/10_Reservation.model.js";
 import ReservationDetail from "../models/11_ReservationDetail.model.js";
 import Rent from "../models/12_Rent.model.js";
@@ -34,7 +33,6 @@ await Address.sync()
 await Category.sync()
 await Product.sync()
 await Image.sync()
-await Status.sync()
 await Reservation.sync()
 await ReservationDetail.sync()
 await Rent.sync()

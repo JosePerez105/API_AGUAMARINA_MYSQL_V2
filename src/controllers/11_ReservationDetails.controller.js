@@ -36,9 +36,9 @@ export const getDetailsByReservation = async(req, res) => {
 };
 
 export const createReservationDetails = async(req, res) => {
-    const {id_reservation, id_product, quantity, total_price} = req.body;
+    const {id_reservation, id_product, quantity, unit_price, total_price} = req.body;
     try {
-        const createdDetail = await ReservationDetails.create({id_reservation, id_product, quantity, total_price});
+        const createdDetail = await ReservationDetails.create({id_reservation, id_product, quantity, unit_price, total_price});
         res.status(201).json({
             ok : true,
             status : 201,
@@ -56,9 +56,9 @@ export const createReservationDetails = async(req, res) => {
 
 export const updateReservationDetailById = async(req, res) => {
     const {id_reservation, id_product} = req.body;
-    const {quantity, total_price} = req.body;
+    const {quantity, unit_price, total_price} = req.body;
     try {
-        const [updatedDetail] = await ReservationDetails.update({quantity, total_price}, {where : {id_reservation, id_product}});
+        const [updatedDetail] = await ReservationDetails.update({quantity, unit_price, total_price}, {where : {id_reservation, id_product}});
         let isUpdated;
         updatedDetail <= 0 ? (isUpdated = false) : (isUpdated = true);
         res.status(200).json({

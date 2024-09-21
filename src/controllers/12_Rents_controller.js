@@ -72,9 +72,9 @@ export const getRentByReservation = async(req, res) => {
 };
 
 export const createRent = async(req, res) => {
-    const {id_reservation, id_seller, id_client, id_status, date_start, date_end, payment} = req.body;
+    const {id_reservation, id_seller, id_client, status, date_start, date_end, payment} = req.body;
     try {
-        const createdRent = await Rents.create({id_reservation, id_seller, id_client, id_status, date_start, date_end, payment});
+        const createdRent = await Rents.create({id_reservation, id_seller, id_client, status, date_start, date_end, payment});
         res.status(201).json({
             ok : true,
             status : 201,
@@ -92,9 +92,9 @@ export const createRent = async(req, res) => {
 
 export const updateRentById = async(req, res) => {
     const {id} = req.params;
-    const {id_reservation, id_seller, id_client, id_status, date_start, date_end, payment} = req.body;
+    const {id_reservation, id_seller, id_client, status, date_start, date_end, payment} = req.body;
     try {
-        const [updatedRent] = await Rents.update({id_reservation, id_seller, id_client, id_status, date_start, date_end, payment}, {where : {id_rent : id}});
+        const [updatedRent] = await Rents.update({id_reservation, id_seller, id_client, status, date_start, date_end, payment}, {where : {id_rent : id}});
         let isUpdated;
         updatedRent <= 0 ? (isUpdated = false) : (isUpdated = true);
         res.status(200).json({

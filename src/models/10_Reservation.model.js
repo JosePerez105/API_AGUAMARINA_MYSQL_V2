@@ -33,9 +33,9 @@ Reservation.init({
         type: DataTypes.STRING,
         allowNull: false
     },
-    id_status: {
-        type: DataTypes.INTEGER,
-        defaultValue: 1
+    status: {
+        type: DataTypes.STRING,
+        defaultValue: "En Espera"
     }
     }, {
     sequelize,

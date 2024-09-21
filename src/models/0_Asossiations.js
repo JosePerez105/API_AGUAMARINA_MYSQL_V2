@@ -8,7 +8,6 @@ import Address from "./5_Address.model.js";
 import Category from "./6_Category.model.js";
 import Product from "./7_Product.model.js";
 import Image from "./8_Image.model.js";
-import Status from "./9_Status.model.js";
 import Reservation from "./10_Reservation.model.js";
 import ReservationDetail from "./11_ReservationDetail.model.js";
 import Rent from "./12_Rent.model.js";
@@ -76,27 +75,6 @@ Image.belongsTo(Product, {
     foreignKey: "id_product",
     as: "product"
 });
-
-
-// Relación entre Status y Reservation (Uno a Muchos)
-Status.hasMany(Reservation, {
-    foreignKey: "id_status",
-    as: "reservations"
-});
-Reservation.belongsTo(Status, {
-    foreignKey: "id_status",
-    as: "status"
-});
-// Relación entre Status y Rent (Uno a Muchos)
-Status.hasMany(Rent, {
-    foreignKey: "id_status",
-    as: "rents"
-});
-Rent.belongsTo(Status, {
-    foreignKey: "id_status",
-    as: "status"
-});
-
 
 // Relación entre User y Reservation (Uno a Muchos)
 User.hasMany(Reservation, {

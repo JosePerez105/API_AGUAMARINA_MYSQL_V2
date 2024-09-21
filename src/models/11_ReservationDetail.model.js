@@ -16,6 +16,10 @@ ReservationDetail.init({
         type: DataTypes.INTEGER,
         allowNull: false
     },
+    unit_price: {
+        type: DataTypes.DECIMAL,
+        allowNull: false
+    },
     total_price: {
         type: DataTypes.DECIMAL,
         allowNull: false
