@@ -139,3 +139,32 @@ export const checkAuth = async(req, res) => {
         res.json({logged : false})
     }
 };
+
+export const checkCookie = async(req, res) => {
+    const jwtCookie = req.cookies["jwt_ag"];
+
+    if (jwtCookie) {
+        try {
+            const payload = jwt.verify(jwtCookie, process.env.SECRET_JWT);
+            console.log(payload);
+            return res.status(200).json({
+                ok : true,
+                status : 200,
+                message : "Cookie Checked",
+                body : payload
+            });
+        } catch (err) {
+            return res.status(400).json({
+                ok : false,
+                status : 400,
+                err
+            });
+        }
+    } else {
+        return res.status(200).json({
+            ok : false,
+            status : 200,
+            message : "Cookie Null"
+        });
+    }
+};
