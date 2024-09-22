@@ -55,42 +55,59 @@ export const getReservationsByUser = async(req, res) => {
     };
 };
 
-export const createReservation = async(req, res) => {
-    const {id_user, start_date, end_date, address, city, neighborhood, status, details=[]} = req.body;
+export const createReservation = async (req, res) => {
+    const { id_user, start_date, end_date, address, city, neighborhood, status, details = [] } = req.body;
+    
     try {
-        const createdReservation = await Reservations.create({id_user, start_date, end_date, address, city, neighborhood, status});
+        const createdReservation = await Reservations.create({
+            id_user,
+            start_date,
+            end_date,
+            address,
+            city,
+            neighborhood,
+            status
+        });
+        
         const id_reservation = createdReservation.id_reservation;
-        const total_reservation = 0
+        let total_reservation = 0;
 
-        const detailsList = details.map(async (detail) => {
+        const detailsList = await Promise.all(details.map(async (detail) => {
             const productDetail = await Products.findByPk(detail.id_product);
 
-            const createdDetail = await Details.create({
-                id_reservation : id_reservation, 
-                id_product : detail.id_product,
-                quantity : detail.quantity,
-                unit_price : productDetail.price,
-                total_price : (detail.quantity * productDetail.price)
-            })
-            total_reservation += createdDetail.total_price
+            if (!productDetail) {
+                throw new Error(`Product with ID ${detail.id_product} not found`);
+            }
 
+            const createdDetail = await Details.create({
+                id_reservation,
+                id_product: detail.id_product,
+                quantity: detail.quantity,
+                unit_price: productDetail.price,
+                total_price: detail.quantity * productDetail.price
+            });
+
+            total_reservation += createdDetail.total_price;
             return createdDetail;
-        })
-        const finalReservation = Reservations.update({total_reservation}, {where : {id_reservation}})
+        }));
+
+        await Reservations.update({ total_reservation }, { where: { id_reservation } });
+
         res.status(201).json({
-            ok : true,
-            status : 201,
-            message : "Created Reservation",
-            body : {finalReservation, detailsList}
+            ok: true,
+            status: 201,
+            message: "Reservation created successfully",
+            body: { reservation: createdReservation, details: detailsList }
         });
-    } catch(err) {
+    } catch (err) {
         res.status(400).json({
-            ok : false,
-            status : 400,
-            err
+            ok: false,
+            status: 400,
+            error: err.message || err
         });
-    };
+    }
 };
+
 
 export const updateReservationById = async(req, res) => {
     const {id} = req.params;
