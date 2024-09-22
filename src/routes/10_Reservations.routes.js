@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createReservation, deleteReservationById, getReservationById, getReservations, getReservationsByUser, updateReservationById } from "../controllers/10_Reservations.controller.js";
+import { approveReservationById, cancelReservationById, createReservation, deleteReservationById, denyReservationById, getReservationById, getReservations, getReservationsByUser, updateReservationById } from "../controllers/10_Reservations.controller.js";
 
 const router = Router();
 
@@ -9,5 +9,9 @@ router.get('/reservations_user/:id', [], getReservationsByUser); // Obtener por 
 router.post('/reservations', [], createReservation); // Crear (req.body)
 router.put('/reservations/:id', [], updateReservationById); // Editar (req.params y req.body)
 router.delete('/reservations/:id', [], deleteReservationById); // Eliminar (req.params)
+
+router.get('/reservations_approve/:id', [], approveReservationById); // Aprobar (req.params)
+router.get('/reservations_deny/:id', [], denyReservationById); // Denegar (req.params)
+router.get('/reservations_cancel/:id', [], cancelReservationById); // Cancelar (req.params)
 
 export default router;

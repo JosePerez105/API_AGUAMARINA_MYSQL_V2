@@ -166,3 +166,78 @@ export const deleteReservationById = async(req, res) => {
         });
     }
 };
+
+export const approveReservationById = async(req, res) => {
+    const {id} = req.params;
+    const newStatus = "Aprobado"
+    try {
+        const [approvedReservation] = await Reservations.update({status : newStatus}, {where : {id_reservation : id}});
+        let isApproved;
+        approvedReservation <= 0 ? (isApproved = false) : (isApproved = true);
+        res.status(200).json({
+            ok : true,
+            status : 200,
+            message : "Approved Reservation",
+            body : {
+                affectedRows : approvedReservation,
+                isApproved
+            }
+        });
+    } catch (err) {
+        res.status(400).json({
+            ok : false,
+            status : 400,
+            err
+        });
+    }
+};
+
+export const denyReservationById = async(req, res) => {
+    const {id} = req.params;
+    const newStatus = "Denegado"
+    try {
+        const [denniedReservation] = await Reservations.update({status : newStatus}, {where : {id_reservation : id}});
+        let isDennied;
+        denniedReservation <= 0 ? (isDennied = false) : (isDennied = true);
+        res.status(200).json({
+            ok : true,
+            status : 200,
+            message : "Dennied Reservation",
+            body : {
+                affectedRows : denniedReservation,
+                isDennied
+            }
+        });
+    } catch (err) {
+        res.status(400).json({
+            ok : false,
+            status : 400,
+            err
+        });
+    }
+};
+
+export const cancelReservationById = async(req, res) => {
+    const {id} = req.params;
+    const newStatus = "Cancelado"
+    try {
+        const [canceledReservation] = await Reservations.update({status : newStatus}, {where : {id_reservation : id}});
+        let isCanceled;
+        canceledReservation <= 0 ? (isCanceled = false) : (isCanceled = true);
+        res.status(200).json({
+            ok : true,
+            status : 200,
+            message : "Canceled Reservation",
+            body : {
+                affectedRows : canceledReservation,
+                isCanceled
+            }
+        });
+    } catch (err) {
+        res.status(400).json({
+            ok : false,
+            status : 400,
+            err
+        });
+    }
+};
