@@ -33,6 +33,9 @@ Reservation.init({
         type: DataTypes.STRING,
         allowNull: false
     },
+    total_reservation: {
+        type: DataTypes.DECIMAL,
+    },
     status: {
         type: DataTypes.STRING,
         defaultValue: "En Espera"

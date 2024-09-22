@@ -60,6 +60,7 @@ export const createReservation = async(req, res) => {
     try {
         const createdReservation = await Reservations.create({id_user, start_date, end_date, address, city, neighborhood, status});
         const id_reservation = createdReservation.id_reservation;
+        const total_reservation = 0
 
         const detailsList = details.map(async (detail) => {
             const productDetail = await Products.findByPk(detail.id_product);
@@ -71,13 +72,16 @@ export const createReservation = async(req, res) => {
                 unit_price : productDetail.price,
                 total_price : (detail.quantity * productDetail.price)
             })
+            total_reservation += createdDetail.total_price
+
             return createdDetail;
         })
+        const finalReservation = Reservations.update({total_reservation}, {where : {id_reservation}})
         res.status(201).json({
             ok : true,
             status : 201,
             message : "Created Reservation",
-            body : {createdReservation, detailsList}
+            body : {finalReservation, detailsList}
         });
     } catch(err) {
         res.status(400).json({
