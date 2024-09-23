@@ -44,7 +44,7 @@ export const validateLogin = async(req, res) => {
                 httpOnly: true,
                 secure : false,
                 maxAge: 12 * 60 * 60 * 1000,
-                sameSite: 'Lax'
+                sameSite: 'none'
             }) 
             res.status(200).header('authorization', accessToken).json({
                     message : "Inicio de Sesión Correcto",
