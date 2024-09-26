@@ -17,9 +17,13 @@ export const PGUSER = process.env.PGUSER;
 export const PGPASSWORD = process.env.PGPASSWORD;
 
 //Variables de Cloudinary
-export const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME || 'dygettihd'
-export const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY || '755195246975729'
-export const CLOUDINARY_SECRET_KEY = process.env.CLOUDINARY_SECRET_KEY || 'S6sF1Uww5dq38gdcRHUBzJuNJl8'
+export const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME || 'dygettihd';
+export const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY || '755195246975729';
+export const CLOUDINARY_SECRET_KEY = process.env.CLOUDINARY_SECRET_KEY || 'S6sF1Uww5dq38gdcRHUBzJuNJl8';
 
 //Variables Secretas JWT
-export const SECRET_JWT = process.env.SECRET_JWT || "ClaveSecreta"
+export const SECRET_JWT = process.env.SECRET_JWT || "ClaveSecreta";
+
+//Variables Secretas GMAIL
+export const USER_GMAIL = process.env.USER_GMAIL;
+export const PASS_APP_GMAIL = process.env.PASS_APP_GMAIL;

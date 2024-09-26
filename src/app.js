@@ -46,7 +46,7 @@ app.use(cookieParser())
 app.use(morgan("dev"));
 
 app.get('/', (req, res) => {
-    res.json({message : "This is Express"});
+    res.json({message : "This is AguaMarina's Api"});
 });
 
 app.use('/api/v2', rolesRoutes);

@@ -4,8 +4,13 @@ import Products from '../models/7_Product.model.js';
 import sequelize from '../db/sequelize.js';
 
 export const getReservations = async(req, res) => {
-    const reservations = await Reservations.findAll();
+    const allReservations = await Reservations.findAll();
     try {
+        const reservations = await Promise.all(allReservations.map(async (res) => {
+            const details = await Details.findAll({ where: { id_reservation: res.id_reservation } });
+            res.setDataValue('details', details);
+            return res;
+        }));
         res.status(200).json({
             ok : true,
             status : 200,
@@ -23,11 +28,13 @@ export const getReservations = async(req, res) => {
 export const getReservationById = async(req, res) => {
     const {id} = req.params;
     try {
-        const reservations = await Reservations.findByPk(id);
+        const reservation = await Reservations.findByPk(id);
+        const details = await Details.findAll({ where: { id_reservation: reservation.id_reservation } });
+        reservation.setDataValue('details', details);
         res.status(200).json({
             ok : true,
             status : 200,
-            body : reservations
+            body : reservation
         });
     } catch(err) {
         res.status(400).json({
@@ -41,7 +48,12 @@ export const getReservationById = async(req, res) => {
 export const getReservationsByUser = async(req, res) => {
     const {id} = req.params;
     try {
-        const reservations = await Reservations.findAll({where : {id_user : id}});
+        const allReservations = await Reservations.findAll({where : {id_user : id}});
+        const reservations = await Promise.all(allReservations.map(async (res) => {
+            const details = await Details.findAll({ where: { id_reservation: res.id_reservation } });
+            res.setDataValue('details', details);
+            return res;
+        }));
         res.status(200).json({
             ok : true,
             status : 200,
@@ -240,4 +252,9 @@ export const cancelReservationById = async(req, res) => {
             err
         });
     }
+};
+
+
+export const sendMail = async(req,res) => {
+    
 };
