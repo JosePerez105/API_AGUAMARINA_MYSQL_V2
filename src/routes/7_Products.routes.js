@@ -4,6 +4,7 @@ import { changeStatusById, createProduct, deleteProductById,getProductById, getP
 
 const router = Router();
 
+router.get('/products', [], getProducts); // Obtener todo
 router.post('/products', [], getProducts); // Obtener todo posiblemente por fechas (req.body)
 router.get('/products_catalog', [], getProductsCatalog); // Obtener todo
 router.get('/products/:id', [], getProductById); // Obtener por Id (req.params)
