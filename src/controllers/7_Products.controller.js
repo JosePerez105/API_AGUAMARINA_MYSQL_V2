@@ -36,7 +36,10 @@ export const getProductsCatalog = async(req, res) => {
         const allProducts = await Products.findAll({where : {status : true}});
 
         const products = await Promise.all(allProducts.map(async (prod) => {
-            const images = await Images.findAll({ where: { id_product: prod.id_product } });
+            const allImages = await Images.findAll({ where: { id_product: prod.id_product } });
+            const images = await Promise.all(allImages.map(async (img) => {
+                return img.path_image
+            }))
             prod.setDataValue('images', images);
             return prod;
         }));
@@ -60,7 +63,10 @@ export const getProductById = async(req, res) => {
     const {id} = req.params;
     try {
         const product = await Products.findByPk(id);
-        const images = await Images.findAll({ where: { id_product: product.id_product } });
+        const allImages = await Images.findAll({ where: { id_product: prod.id_product } });
+            const images = await Promise.all(allImages.map(async (img) => {
+                return img.path_image
+            }))
         product.setDataValue('images', images);
         res.status(200).json({
             ok : true,
@@ -82,7 +88,10 @@ export const getProductsByCategory = async(req, res) => {
         const allProducts = await Products.findAll({where : {id_category : id}});
 
         const products = await Promise.all(allProducts.map(async (prod) => {
-            const images = await Images.findAll({ where: { id_product: prod.id_product } });
+            const allImages = await Images.findAll({ where: { id_product: prod.id_product } });
+            const images = await Promise.all(allImages.map(async (img) => {
+                return img.path_image
+            }))
             prod.setDataValue('images', images);
             return prod;
         }));
@@ -224,7 +233,10 @@ export const findProductByDateRange = async(req, res) => {
         const allProducts = await Products.findAll();   
         
         let products = await Promise.all(allProducts.map(async(prod) => {
-            const images = await Images.findAll({ where: { id_product: prod.id_product } });
+            const allImages = await Images.findAll({ where: { id_product: prod.id_product } });
+            const images = await Promise.all(allImages.map(async (img) => {
+                return img.path_image
+            }));
             prod.setDataValue('images', images);
             let disponibility = prod.total_quantity;
             reservationDetailsInRange.forEach((detail) => {
