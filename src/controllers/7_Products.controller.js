@@ -8,7 +8,10 @@ export const getProducts = async (req, res) => {
         const allProducts = await Products.findAll();
 
         const products = await Promise.all(allProducts.map(async (prod) => {
-            const images = await Images.findAll({ where: { id_product: prod.id_product } });
+            const allImages = await Images.findAll({ where: { id_product: prod.id_product } });
+            const images = await Promise.all(allImages.map(async (img) => {
+                return img.path_image
+            }))
             prod.setDataValue('images', images);
             return prod;
         }));
