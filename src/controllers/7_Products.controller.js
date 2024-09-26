@@ -4,7 +4,8 @@ import ReservationDetails from '../models/11_ReservationDetail.model.js';
 import Images from '../models/8_Image.model.js';
 
 export const getProducts = async (req, res) => {
-    try {
+    const {start_date, end_date} = req.body
+    if (!(start_date && end_date)) {
         const allProducts = await Products.findAll();
 
         const products = await Promise.all(allProducts.map(async (prod) => {
@@ -13,20 +14,76 @@ export const getProducts = async (req, res) => {
                 return img.path_image
             }))
             prod.setDataValue('images', images);
+            prod.setDataValue('disponibility', prod.total_quantity);
             return prod;
         }));
 
-        res.status(200).json({
+        return res.status(200).json({
             ok: true,
             status: 200,
             body: products,
         });
+    };
+
+    const start = new Date(start_date);
+    const end = new Date(end_date);
+    try {
+        const allReservations = await Reservations.findAll();
+
+        const reservationsIdsInRange = allReservations
+            .filter((res) => {
+                return (
+                    new Date(res.start_date) <= end &&
+                    new Date(res.end_date) >= start &&
+                    (res.status == "En Espera" || res.status == "Aprobado")
+                );
+            })
+            .map((res) => res.id_reservation);
+
+        console.log("IDS Reservas: ", reservationsIdsInRange)
+        let reservationDetailsInRange = await Promise.all(
+            reservationsIdsInRange.map(async (id) => {
+                return await ReservationDetails.findAll({
+                    where: { id_reservation: id },
+                });
+            })
+        );
+        reservationDetailsInRange = reservationDetailsInRange.flat();
+
+        const allProducts = await Products.findAll();   
+        
+        const products = await Promise.all(allProducts.map(async(prod) => {
+            const allImages = await Images.findAll({ where: { id_product: prod.id_product } });
+            const images = await Promise.all(allImages.map(async (img) => {
+                return img.path_image
+            }));
+            prod.setDataValue('images', images);
+            let disponibility = prod.total_quantity;
+            reservationDetailsInRange.forEach((detail) => {
+                if (detail.id_product == prod.id_product) {
+                    disponibility -= detail.quantity
+                }
+            })
+            if (disponibility < 0) {
+                prod.setDataValue('disponibility', 0);
+            } else {
+                prod.setDataValue('disponibility', disponibility);
+            }
+            console.log(prod)
+            return prod
+        }));
+
+        res.status(200).json({
+            ok : true,
+            status : 200,
+            body : products
+        });
 
     } catch (err) {
         res.status(400).json({
-            ok: false,
-            status: 400,
-            err: err.message,
+            ok : false,
+            status : 400,
+            err : err.message
         });
     }
 };
@@ -199,73 +256,6 @@ export const deleteProductById = async(req, res) => {
             ok : false,
             status : 400,
             err
-        });
-    }
-};
-
-export const findProductByDateRange = async(req, res) => {
-    const {start_date, end_date} = req.body
-    const start = new Date(start_date);
-    const end = new Date(end_date);
-    try {
-        const allReservations = await Reservations.findAll();
-
-        const reservationsIdsInRange = allReservations
-            .filter((res) => {
-                return (
-                    new Date(res.start_date) <= end &&
-                    new Date(res.end_date) >= start &&
-                    (res.status == "En Espera" || res.status == "Aprobado")
-                );
-            })
-            .map((res) => res.id_reservation);
-
-        console.log("IDS Reservas: ", reservationsIdsInRange)
-        let reservationDetailsInRange = await Promise.all(
-            reservationsIdsInRange.map(async (id) => {
-                return await ReservationDetails.findAll({
-                    where: { id_reservation: id },
-                });
-            })
-        );
-        reservationDetailsInRange = reservationDetailsInRange.flat();
-
-        const allProducts = await Products.findAll();   
-        
-        let products = await Promise.all(allProducts.map(async(prod) => {
-            const allImages = await Images.findAll({ where: { id_product: prod.id_product } });
-            const images = await Promise.all(allImages.map(async (img) => {
-                return img.path_image
-            }));
-            prod.setDataValue('images', images);
-            let disponibility = prod.total_quantity;
-            reservationDetailsInRange.forEach((detail) => {
-                if (detail.id_product == prod.id_product) {
-                    disponibility -= detail.quantity
-                }
-            })
-            if (disponibility < 0) {
-                prod.setDataValue('disponibility', 0);
-            } else {
-                prod.setDataValue('disponibility', disponibility);
-            }
-            console.log(prod)
-            return prod
-        }));
-
-        res.status(200).json({
-            ok : true,
-            status : 200,
-            body : {
-                products
-            }
-        });
-
-    } catch (err) {
-        res.status(400).json({
-            ok : false,
-            status : 400,
-            err : err.message
         });
     }
 };
