@@ -194,7 +194,7 @@ export const forgotPassword = async (req, res) => {
         console.log(response)
 
         return res.status(200).json({
-            message: `Revisa tu correo electrónico`,
+            message: `Revisa la bandeja de entrada`,
             ok: true
         });
 
@@ -202,7 +202,49 @@ export const forgotPassword = async (req, res) => {
         return res.status(400).json({
             ok: false,
             status: 400,
-            error: err.message || err
+            err: err.message || err
         });
     }
 };
+
+export const resetPassword = async (req, res) => {
+    const { token, newPassword } = req.body;
+
+    try {
+        const decoded = jwt.verify(token, process.env.SECRET_JWT);
+        
+        const user = await Users.findByPk(decoded.id_user);
+
+        if (!user) {
+            return res.status(404).json({
+                message: "Usuario no encontrado",
+                ok: false
+            });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword.toString(), 10);
+
+        user.password = hashedPassword;
+        await user.save();
+
+        return res.status(200).json({
+            message: "Contraseña actualizada con éxito",
+            ok: true
+        });
+
+    } catch (err) {
+        if (err.name === 'TokenExpiredError') {
+            return res.status(400).json({
+                message: "El token ha expirado",
+                ok: false
+            });
+        }
+
+        return res.status(400).json({
+            ok: false,
+            status: 400,
+            err: err.message || err
+        });
+    }
+};
+

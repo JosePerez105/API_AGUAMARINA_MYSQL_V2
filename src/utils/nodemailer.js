@@ -18,9 +18,10 @@ const enviarMail = (options) => {
         if (error){
             console.log(error, "No se ha podido enviar el Correo");
             sended = false;
+        } else {
+            console.log("Correo Enviado Exitosamente")
+            sended = true;
         }
-        console.log("Correo Enviado Exitosamente")
-        let sended = true;
     })
     return sended;
 };
