@@ -176,14 +176,16 @@ export const forgotPassword = async (req, res) => {
     const { mail } = req.body;
 
     try {
-        const user = await Users.findAll({ where: { mail } });
-        
-        if (!user) {
+        const users = await Users.findAll({ where: { mail } });
+        console.log("usuarios:", users);
+        if (users <= 0) {
             return res.status(200).json({
                 message: "No existe una cuenta con este correo",
                 ok: false
             });
-        }
+        };
+
+        const user = users[0];
 
         const payload = { id_user: user.id_user };
         const resetToken = jwt.sign(payload, process.env.SECRET_JWT, { expiresIn: '15m' });
@@ -194,7 +196,7 @@ export const forgotPassword = async (req, res) => {
         console.log(response)
 
         return res.status(200).json({
-            message: `Revisa la bandeja de entrada`,
+            message: `Revisa la bandeja de entrada de tu correo "${user.mail}"`,
             ok: true
         });
 
