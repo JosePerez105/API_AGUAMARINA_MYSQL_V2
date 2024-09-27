@@ -207,6 +207,7 @@ export const forgotPassword = async (req, res) => {
     }
 };
 
+
 export const resetPassword = async (req, res) => {
     const { token, newPassword } = req.body;
 
@@ -228,7 +229,7 @@ export const resetPassword = async (req, res) => {
         await user.save();
 
         return res.status(200).json({
-            message: "Contraseña actualizada con éxito",
+            message: "Contraseña actualizada con éxito, Inicia Sesión",
             ok: true
         });
 
