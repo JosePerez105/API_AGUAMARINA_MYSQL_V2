@@ -85,14 +85,15 @@ export const createImage = async (req, res) => {
 
 export const updateImagesByProduct = async(req, res) => {
     const {id} = req.params;
-    const arrayImages = req.body;
+    const {arrayImages} = req.body;
+    console.log(arrayImages);
     try {
         await Images.destroy({where : {id_product : id}});
 
         const updatedImages = await Promise.all(
             arrayImages.map(async (image) => {
                 const path_image = image;
-                return await Images.create({ id_product, path_image });
+                await Images.create({ id_product: id, path_image });
             })
         );
 
