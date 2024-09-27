@@ -28,12 +28,12 @@ export const generateCode = async(req, res) => {
 
     const response = await fetch('http://worldtimeapi.org/api/timezone/America/Bogota',{method : 'GET'});
     const data = await response.json();
-    const original = new Date(data.datetime);
-    console.log(original)
-    original.getMinutes(original.getMinutes() + 10);
+    let original = await rightNow();
+    console.log(original, "Ahora")
+    original.setMinutes(original.getMinutes() + 15);
     const expires_at = original;
 
-    console.log(expires_at, code)
+    console.log(expires_at, "Expira", code)
     try {
         const [createdCode, created] = await VerificactionsCodes.upsert({mail, code : code_bcrypt, expires_at});
 
@@ -70,21 +70,22 @@ export const validateVerificationCode = async(req, res) => {
         const storedCode = allCodes[0].code;
         console.log(allCodes[0].expires_at)
         const expires_at = new Date(allCodes[0].expires_at);
-        console.log(expires_at);
+        console.log(expires_at, "Expira");
 
         const currentTime = await rightNow();
-        console.log(currentTime)
+        console.log(currentTime, "ahora");
 
 
-        if (currentTime > expires_at) {
-            return res.status(201).json({ ok: false, message: "El código de Verificación ha expirado"});
-        };
+        
 
         const isMatch = await bcrypt.compare(codeStr, storedCode);
         if (!isMatch) {
             return res.status(201).json({ok: false, message: 'Código de verificación incorrecto'});
         };
 
+        if (currentTime > expires_at) {
+            return res.status(201).json({ ok: false, message: "El código de Verificación ha expirado"});
+        };
 
         deleteCode(mail);
         return res.status(201).json({ok: true, message: 'Código de verificación correcto'});

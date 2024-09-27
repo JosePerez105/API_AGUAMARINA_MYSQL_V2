@@ -148,7 +148,6 @@ export const checkCookie = async(req, res) => {
     if (jwtCookie) {
         try {
             const payload = jwt.verify(jwtCookie, process.env.SECRET_JWT);
-            console.log(payload);
             return res.status(200).json({
                 ok : true,
                 status : 200,
