@@ -299,6 +299,15 @@ export const changeStatusById = async(req, res) => {
 export const deleteProductById = async(req, res) => {
     const {id} = req.params;
     try {
+        const details = await ReservationDetails.findAll({where : {id_product : id}});
+        if (details.length > 0) {
+            return res.status(200).json({
+                ok : false,
+                status : 200,
+                message : "Hay Reservas con este producto asociado, no podemos eliminar tu producto"
+            });
+        }
+        
         const deletedProduct = await Products.destroy({where : {id_product : id}});
         let isDeleted;
         deletedProduct <= 0 ? (isDeleted = false) : (isDeleted = true);
