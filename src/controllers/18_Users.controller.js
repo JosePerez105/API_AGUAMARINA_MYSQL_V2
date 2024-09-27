@@ -57,13 +57,21 @@ export const getUserByMail = async(req, res) => {
 export const createUser = async(req, res) => {
     const {names, lastnames, dni, mail, password, phone_number, id_rol = 2, status = true} = req.body;
     try {
+        const users = await Users.findAll({where : {mail}})
+        if (users.length > 0) {
+            return res.status(200).json({
+                ok : false,
+                status : 200,
+                message : "Ya se encuentra registrado el correo electrónico",
+            });
+        }
         const salt = await bcrypt.genSalt(10);
         const passwordBcrypt = await bcrypt.hash(password.toString(), salt);
         const createdUser = await Users.create({names, lastnames, dni, mail, password : passwordBcrypt, phone_number, id_rol, status});
         res.status(201).json({
             ok : true,
             status : 201,
-            message : "Created User",
+            message : "Usuario Registrado Correctamente",
             body : createdUser
         });
     } catch(err) {

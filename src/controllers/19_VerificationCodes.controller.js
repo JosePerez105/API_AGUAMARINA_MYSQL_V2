@@ -29,11 +29,9 @@ export const generateCode = async(req, res) => {
     const response = await fetch('http://worldtimeapi.org/api/timezone/America/Bogota',{method : 'GET'});
     const data = await response.json();
     let original = await rightNow();
-    console.log(original, "Ahora")
     original.setMinutes(original.getMinutes() + 15);
     const expires_at = original;
 
-    console.log(expires_at, "Expira", code)
     try {
         const [createdCode, created] = await VerificactionsCodes.upsert({mail, code : code_bcrypt, expires_at});
 
@@ -68,15 +66,9 @@ export const validateVerificationCode = async(req, res) => {
         };
 
         const storedCode = allCodes[0].code;
-        console.log(allCodes[0].expires_at)
         const expires_at = new Date(allCodes[0].expires_at);
-        console.log(expires_at, "Expira");
 
         const currentTime = await rightNow();
-        console.log(currentTime, "ahora");
-
-
-        
 
         const isMatch = await bcrypt.compare(codeStr, storedCode);
         if (!isMatch) {
