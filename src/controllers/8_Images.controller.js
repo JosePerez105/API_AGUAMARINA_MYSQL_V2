@@ -89,7 +89,7 @@ export const updateImagesByProduct = async(req, res) => {
     try {
         await Images.destroy({where : {id_product : id}});
 
-        const createdImages = await Promise.all(
+        const updatedImages = await Promise.all(
             arrayImages.map(async (image) => {
                 const path_image = image;
                 return await Images.create({ id_product, path_image });
@@ -101,7 +101,7 @@ export const updateImagesByProduct = async(req, res) => {
             status : 200,
             message : "Updated Images By Product",
             body : {
-                createdImages
+                updatedImages
             }
         });
     } catch(err) {
