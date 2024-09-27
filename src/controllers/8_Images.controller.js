@@ -56,25 +56,6 @@ export const getImagesByProduct = async(req, res) => {
     }
 };
 
-/* export const createImage = async(req, res) => {
-    const {id_product, path_image} = req.body;
-    try {
-        const createdImage = await Images.create({id_product, path_image});
-        res.status(201).json({
-            ok : true,
-            status : 201,
-            message : "Created Image",
-            body : createdImage
-        });
-    } catch(err) {
-        res.status(400).json({
-            ok : false,
-            status : 400,
-            err
-        });
-    };
-}; */
-
 export const createImage = async (req, res) => {
     const arrayImages = req.body;
     try {
@@ -102,20 +83,25 @@ export const createImage = async (req, res) => {
 };
 
 
-export const updateImageByProduct = async(req, res) => {
+export const updateImagesByProduct = async(req, res) => {
     const {id} = req.params;
-    const {id_product, path_image} = req.body;
+    const arrayImages = req.body;
     try {
-        const [updatedImage] = await Images.update({id_product, path_image}, {where : {id_image : id}});
-        let isUpdated;
-        updatedImage <= 0 ? (isUpdated = false) : (isUpdated = true);
+        await Images.destroy({where : {id_product : id}});
+
+        const createdImages = await Promise.all(
+            arrayImages.map(async (image) => {
+                const { id_product, path_image } = image;
+                return await Images.create({ id_product, path_image });
+            })
+        );
+
         res.status(200).json({
             ok : true,
             status : 200,
-            message : "Updated Image",
+            message : "Updated Images By Product",
             body : {
-                affectedRows : updatedImage,
-                isUpdated
+                createdImages
             }
         });
     } catch(err) {
