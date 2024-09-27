@@ -91,7 +91,7 @@ export const updateImagesByProduct = async(req, res) => {
 
         const createdImages = await Promise.all(
             arrayImages.map(async (image) => {
-                const { id_product, path_image } = image;
+                const path_image = image;
                 return await Images.create({ id_product, path_image });
             })
         );
