@@ -47,7 +47,6 @@ export const generateCode = async(req, res) => {
             ok: true,
             status: 201,
             message: `Hemos enviado un código de verificación a tu correo, recuerda revisar los correos no deseados`,
-            body: createdCode
         });
     } catch (err) {
         res.status(400).json({
