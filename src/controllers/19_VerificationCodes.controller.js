@@ -1,5 +1,6 @@
 import VerificactionsCodes from '../models/19_VerificationCode.model.js';
 import bcrypt from 'bcrypt'
+import { sendMailOptions } from "../utils/nodemailer.js";
 
 export const getVerificationCodes = async(req, res) => {
     const codes = await VerificactionsCodes.findAll();
@@ -29,17 +30,23 @@ export const generateCode = async(req, res) => {
     const data = await response.json();
     const original = new Date(data.datetime);
     console.log(original)
-    original.getMinutes(original.getMinutes() + 10); //10 Minutos de tiempo de expiración
+    original.getMinutes(original.getMinutes() + 10);
     const expires_at = original;
 
     console.log(expires_at, code)
     try {
         const [createdCode, created] = await VerificactionsCodes.upsert({mail, code : code_bcrypt, expires_at});
-    
+
+        const response = sendMailOptions(mail, "Codigo de Verificación", "Bienvenido a AguaMarina!!", 
+            `<p>¡Gracias por unirte a nuestra comunidad! Estamos emocionados de tenerte con nosotros.</p>
+            <p>Tu código de verificación es:</p>
+            <div class="verification-code">${code}</div>
+            <p>Utiliza este código para verificar de que éste es tu correo para seguir con tu registro</p>`);
+
         res.status(201).json({
             ok: true,
             status: 201,
-            message: created ? "Created Code" : "Updated Code",
+            message: `Hemos enviado un código de verificación a tu correo, recuerda revisar los correos no deseados`,
             body: createdCode
         });
     } catch (err) {
