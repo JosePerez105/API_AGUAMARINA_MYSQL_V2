@@ -8,6 +8,8 @@ router.get('/products', [], getProducts); // Obtener todo
 router.post('/products', [], getProducts); // Obtener todo posiblemente por fechas (req.body)
 
 router.get('/products_catalog', [], getProductsCatalog); // Obtener todo
+router.post('/products_catalog', [], getProductsCatalog); // Obtener todo posiblemente por fechas (req.body)
+
 router.get('/products/:id', [], getProductById); // Obtener por Id (req.params)
 router.get('/products_category/:id', [], getProductsByCategory) // Obtener por Categoria (req.params)
 router.post('/products', [], createProduct); // Crear (req.body)
