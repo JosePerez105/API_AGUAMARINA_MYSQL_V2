@@ -2,6 +2,7 @@ import Users from "../models/18_User.model.js";
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
 import "../config.js";
+import { sendMailOptions } from "../utils/nodemailer.js";
 import { getNamesPermissionsByRolFunc } from "./3_RolPermissions.controller.js";
 
 export const validateLogin = async(req, res) => {
@@ -73,7 +74,7 @@ export function generateAccessToken(payload) {
 
 
 export const validateToken = (req, res, next) => {
-    const token = req.cookies.jwt_ag || req.headers['authorization'];
+    const token = req.cookies.jwt_ag || req.headers['authorization'] || req.body.token;
   
     if (!token) {
       return res.status(401).json({ message: 'No Autorizado: No se proporcionó un token' });
@@ -166,6 +167,42 @@ export const checkCookie = async(req, res) => {
             ok : false,
             status : 200,
             message : "Cookie Null"
+        });
+    }
+};
+
+
+export const forgotPassword = async (req, res) => {
+    const { mail } = req.body;
+
+    try {
+        const user = await Users.findAll({ where: { mail } });
+        
+        if (!user) {
+            return res.status(200).json({
+                message: "No existe una cuenta con este correo",
+                ok: false
+            });
+        }
+
+        const payload = { id_user: user.id_user };
+        const resetToken = jwt.sign(payload, process.env.SECRET_JWT, { expiresIn: '15m' });
+        const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
+        
+        const response = sendMailOptions(mail, "prueba", "Este es el Titulo", `<p>Haga clic en el siguiente enlace para restablecer su contraseña:</p><a class="btn-link" href="${resetLink}">Restablecer contraseña</a>`);
+
+        console.log(response)
+
+        return res.status(200).json({
+            message: `Revisa tu correo electrónico`,
+            ok: true
+        });
+
+    } catch (err) {
+        return res.status(400).json({
+            ok: false,
+            status: 400,
+            error: err.message || err
         });
     }
 };

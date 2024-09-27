@@ -27,3 +27,6 @@ export const SECRET_JWT = process.env.SECRET_JWT || "ClaveSecreta";
 //Variables Secretas GMAIL
 export const USER_GMAIL = process.env.USER_GMAIL;
 export const PASS_APP_GMAIL = process.env.PASS_APP_GMAIL;
+
+//Variables de FrontEnd
+export const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:3000"
