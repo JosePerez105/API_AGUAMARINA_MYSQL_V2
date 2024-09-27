@@ -102,7 +102,7 @@ export const createImage = async (req, res) => {
 };
 
 
-export const updateImageById = async(req, res) => {
+export const updateImageByProduct = async(req, res) => {
     const {id} = req.params;
     const {id_product, path_image} = req.body;
     try {
@@ -127,7 +127,7 @@ export const updateImageById = async(req, res) => {
     };
 };
 
-export const deleteImageByProduct = async(req, res) => {
+export const deleteImageById = async(req, res) => {
     const {id} = req.params;
     try {
         const deletedImage = await Images.destroy({where : {id_image : id}});

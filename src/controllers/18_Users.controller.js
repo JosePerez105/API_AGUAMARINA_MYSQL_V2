@@ -79,7 +79,7 @@ export const updateUserById = async(req, res) => {
     const {id} = req.params;
     const {names, lastnames, dni, mail, password, phone_number, id_rol, status} = req.body;
     try {
-        const [updatedUser] = await PurchaseDetails.update({names, lastnames, dni, mail, password, phone_number, id_rol, status}, {where : {id_user : id}});
+        const [updatedUser] = await Users.update({names, lastnames, dni, mail, password, phone_number, id_rol, status}, {where : {id_user : id}});
         let isUpdated;
         updatedUser <= 0 ? (isUpdated = false) : (isUpdated = true);
         res.status(200).json({
