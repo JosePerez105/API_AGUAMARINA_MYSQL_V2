@@ -120,7 +120,7 @@ export const getProductById = async(req, res) => {
     const {id} = req.params;
     try {
         const product = await Products.findByPk(id);
-        const allImages = await Images.findAll({ where: { id_product: prod.id_product } });
+        const allImages = await Images.findAll({ where: { id_product: product.id_product } });
             const images = await Promise.all(allImages.map(async (img) => {
                 return img.path_image
             }))
