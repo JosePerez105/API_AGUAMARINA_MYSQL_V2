@@ -2,6 +2,7 @@ import Products from '../models/7_Product.model.js';
 import Reservations from '../models/10_Reservation.model.js';
 import ReservationDetails from '../models/11_ReservationDetail.model.js';
 import Images from '../models/8_Image.model.js';
+import Categories from '../models/6_Category.model.js';
 
 export const getProducts = async (req, res) => {
     const {start_date, end_date} = req.body
@@ -10,10 +11,12 @@ export const getProducts = async (req, res) => {
 
         const products = await Promise.all(allProducts.map(async (prod) => {
             const allImages = await Images.findAll({ where: { id_product: prod.id_product } });
+            const category = await Categories.findByPk(prod.id_category);
             const images = await Promise.all(allImages.map(async (img) => {
                 return img.path_image
             }))
             prod.setDataValue('images', images);
+            prod.setDataValue('category', category.name)
             prod.setDataValue('disponibility', prod.total_quantity);
             return prod;
         }));
@@ -54,10 +57,12 @@ export const getProducts = async (req, res) => {
         
         const products = await Promise.all(allProducts.map(async(prod) => {
             const allImages = await Images.findAll({ where: { id_product: prod.id_product } });
+            const category = await Categories.findByPk(prod.id_category);
             const images = await Promise.all(allImages.map(async (img) => {
                 return img.path_image
             }));
             prod.setDataValue('images', images);
+            prod.setDataValue('category', category.name)
             let disponibility = prod.total_quantity;
             reservationDetailsInRange.forEach((detail) => {
                 if (detail.id_product == prod.id_product) {
