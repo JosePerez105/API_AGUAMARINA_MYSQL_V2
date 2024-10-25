@@ -1,9 +1,17 @@
 import { json } from 'sequelize';
 import Categories from '../models/6_Category.model.js'
+import Product from '../models/7_Product.model.js';
 
 export const getCategories = async(req, res) => {
-    const categories = await Categories.findAll();
     try {
+        const allCategories = await Categories.findAll();
+        const products = await Product.findAll();
+
+        const categories = await Promise.all(allCategories.map(async (cat) => {
+            const quantity = products.filter((prod) => prod.id_category == cat.id_category).length
+            cat.setDataValue('quantity', quantity);
+            return cat;
+        }));
         res.status(200).json({
             ok : true,
             status : 200,
@@ -22,6 +30,10 @@ export const getCategoryById = async(req, res) => {
     const {id} = req.params;
     try {
         const categories = await Categories.findByPk(id);
+        const products = await Product.findAll();
+        const quantity = products.filter((prod) => prod.id_category == categories.id_category).length
+        categories.setDataValue('quantity', quantity);
+        
         res.status(200).json({
             ok : true,
             status : 200,
@@ -39,7 +51,15 @@ export const getCategoryById = async(req, res) => {
 export const getCategoryByName = async(req, res) => {
     const {name} = req.body;
     try {
-        const categories = await Categories.findAll({where : {name}});
+        const allCategories = await Categories.findAll({where : {name}});
+        const products = await Product.findAll();
+
+        const categories = await Promise.all(allCategories.map(async (cat) => {
+            const quantity = products.filter((prod) => prod.id_category == cat.id_category).length
+            cat.setDataValue('quantity', quantity);
+            return cat;
+        }));
+        
         res.status(200).json({
             ok : true,
             status : 200,
