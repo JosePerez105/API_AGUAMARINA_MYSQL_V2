@@ -6,7 +6,7 @@ export const getUsers = async(req, res) => {
     const allUsers = await Users.findAll();
     const users = await Promise.all(allUsers.map(async(user) => {
         const rol = await Roles.findByPk(user.id_rol)
-        user.setDataValue('rol', rol);
+        user.setDataValue('rol', rol.name);
         return user;
     }))
     try {
