@@ -1,8 +1,13 @@
 import Users from '../models/18_User.model.js';
+import Roles from '../models/1_Rol.model.js';
 import bcrypt from "bcrypt"
 
 export const getUsers = async(req, res) => {
-    const users = await Users.findAll();
+    const allUsers = await Users.findAll();
+    const users = await Promise.all(allUsers.map(async(user) => {
+        const rol = await Roles.findByPk(user.id_rol)
+        user.setDataValue('rol', rol);
+    }))
     try {
         res.status(200).json({
             ok : true,
@@ -22,6 +27,8 @@ export const getUserById = async(req, res) => {
     const {id} = req.params;
     try {
         const users = await Users.findByPk(id);
+        const rol = await Roles.findByPk(users.id_rol)
+        users.setDataValue('rol', rol);
         res.status(200).json({
             ok : true,
             status : 200,
@@ -40,6 +47,8 @@ export const getUserByMail = async(req, res) => {
     const {mail} = req.body;
     try {
         const users = await Users.findAll({where : {mail}});
+        const rol = await Roles.findByPk(users.id_rol)
+        users.setDataValue('rol', rol);
         res.status(200).json({
             ok : true,
             status : 200,

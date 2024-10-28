@@ -8,7 +8,6 @@ export const getProducts = async (req, res) => {
     const {start_date, end_date} = req.body
     if (!(start_date && end_date)) {
         const allProducts = await Products.findAll();
-
         const products = await Promise.all(allProducts.map(async (prod) => {
             const allImages = await Images.findAll({ where: { id_product: prod.id_product } });
             const category = await Categories.findByPk(prod.id_category);
