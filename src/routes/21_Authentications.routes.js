@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { checkAuth, checkCookie, forgotPassword, resetPassword, validateLogin, validateLogout, validateToken } from "../controllers/20_Authentications.controller.js";
+import { checkAuth, checkCookie, forgotPassword, resetPassword, validateLogin, validateLogout, validateToken } from "../controllers/21_Authentications.controller.js";
 
 const router = Router();
 

@@ -18,4 +18,5 @@ router.patch('/products/:id', [], changeStatusById); // Cambiar estado (req.para
 router.delete('/products/:id', [], deleteProductById); // Eliminar (req.params)
 
 
+
 export default router;

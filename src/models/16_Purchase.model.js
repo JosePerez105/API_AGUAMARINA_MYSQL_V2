@@ -9,12 +9,24 @@ Purchase.init({
             autoIncrement: true,
             primaryKey: true
         },
+        id_product: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
         id_user: {
             type: DataTypes.INTEGER,
             allowNull: false
         },
         purchase_date: {
             type: DataTypes.DATE,
+            allowNull: false
+        },
+        quantity: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        unit_price: {
+            type: DataTypes.DECIMAL,
             allowNull: false
         },
         total_price: {

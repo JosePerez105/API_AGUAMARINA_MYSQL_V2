@@ -23,7 +23,7 @@ import VerificationCode from "../models/19_VerificationCode.model.js";
 
 //Para Borrar y crear todo de nuevo
 import sequelize from "./sequelize.js";
-await sequelize.drop().then(() => {console.log("Tablas borradas");});
+await sequelize.drop({ cascade: true }).then(() => {console.log("Tablas borradas");});
 await Rol.sync()
 await Permission.sync()
 await RolPermissions.sync()

@@ -14,9 +14,8 @@ import Rent from "./12_Rent.model.js";
 import PaymentRegister from "./13_PaymentRegister.model.js";
 import CheckList from "./14_CheckList.model.js";
 import CheckListItem from "./15_CheckListItem.model.js";
-import Purchase from "./16_Purchase.model.js";
-import PurchaseDetail from "./17_PurchaseDetail.model.js";
 import VerificationCode from "./19_VerificationCode.model.js";
+import Purchase from "./16_Purchase.model.js";
 
 
 // Relaciones entre Rol y Permission (Muchos a Muchos)
@@ -152,36 +151,22 @@ CheckListItem.belongsTo(CheckList, {
     as: "checklist"
 });
 
+//Relación entre Product y Purchase (Uno a Muchos)
+Product.hasMany(Purchase, {
+    foreignKey: "id_product",
+    as: "Purchase"
+});
+Purchase.belongsTo(Product, {
+    foreignKey: "id_product",
+    as: "Product"
+})
 
-// Relación entre User y Purchase (Uno a Muchos)
+//Relación entre User y Purchase (Uno a Muchos)
 User.hasMany(Purchase, {
     foreignKey: "id_user",
-    as: "purchases"
+    as: "Purchase"
 });
 Purchase.belongsTo(User, {
     foreignKey: "id_user",
-    as: "user"
-});
-
-
-// Relación entre Purchase y PurchaseDetail (Uno a Muchos)
-Purchase.hasMany(PurchaseDetail, {
-    foreignKey: "id_purchase",
-    as: "purchaseDetails",
-    onDelete : "CASCADE"
-});
-PurchaseDetail.belongsTo(Purchase, {
-    foreignKey: "id_purchase",
-    as: "purchase"
-});
-
-
-// Relación entre Product y PurchaseDetail (Uno a Muchos)
-Product.hasMany(PurchaseDetail, {
-    foreignKey: "id_product",
-    as: "purchaseDetails"
-});
-PurchaseDetail.belongsTo(Product, {
-    foreignKey: "id_product",
-    as: "product"
-});
+    as: "User"
+})

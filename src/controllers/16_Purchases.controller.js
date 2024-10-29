@@ -15,7 +15,7 @@ export const getPurchases = async(req, res) => {
             err
         });
     };
-};
+}
 
 export const getPurchaseById = async(req, res) => {
     const {id} = req.params;
@@ -54,9 +54,9 @@ export const getPurchasesByUser = async(req, res) => {
 };
 
 export const createPurchase = async(req, res) => {
-    const {id_user, purchase_date, total_price, status} = req.body;
+    const {id_product, id_user, purchase_date, quantity, unit_price, total_price} = req.body;
     try {
-        const createdPurchase = await Purchases.create({id_user, purchase_date, total_price, status});
+        const createdPurchase = await Purchases.create({id_product, id_user, purchase_date, quantity, unit_price, total_price, status: true});
         res.status(201).json({
             ok : true,
             status : 201,
@@ -72,50 +72,25 @@ export const createPurchase = async(req, res) => {
     };
 };
 
-export const updatePurchaseById = async(req, res) => {
+export const denyPurchaseById = async(req, res) => {
     const {id} = req.params;
-    const {id_user, purchase_date, total_price, status} = req.body;
     try {
-        const [updatedPurchase] = await Purchases.update({id_user, purchase_date, total_price, status}, {where : {id_purchase : id}});
-        let isUpdated;
-        updatedPurchase <= 0 ? (isUpdated = false) : (isUpdated = true);
-        res.status(200).json({
+        const denniedPurchase = await Purchases.update({status : false}, {where : {id_purchase : id}});
+        let isDennied;
+        denniedPurchase <= 0 ? (isDennied = false) : (isDennied = true);
+        res.status(201).json({
             ok : true,
-            status : 200,
-            message : "Updated Purchase",
+            status : 201,
             body : {
-                affectedRows : updatedPurchase,
-                isUpdated
+                denniedPurchase,
+                isDennied
             }
         });
-    } catch(err) {
+    }  catch(err) {
         res.status(400).json({
             ok : false,
             status : 400,
             err
         });
     };
-};
-
-export const deletePurchaseById = async(req, res) => {
-    const {id} = req.params;
-    try {
-        const deletedItem = await Purchases.destroy({where : {id_purchase : id}});
-        let isDeleted;
-        deletedItem <= 0 ? (isDeleted = false) : (isDeleted = true);
-        res.status(201).json({
-            ok : true,
-            status : 204,
-            body : {
-                deletedItem,
-                isDeleted
-            }
-        });
-    } catch(err) {
-        res.status(400).json({
-            ok : false,
-            status : 400,
-            err
-        });
-    }
 };

@@ -20,7 +20,7 @@ import purchasesRoutes from './routes/16_Purchases.routes.js';
 import purchaseDetailsRoutes from './routes/17_PurchaseDetails.routes.js';
 import usersRoutes from './routes/18_Users.routes.js';
 import verificationCodesRoutes from './routes/19_VerificationCodes.routes.js'
-import authenticationsRoutes from './routes/20_Authentications.routes.js'
+import authenticationsRoutes from './routes/21_Authentications.routes.js'
 import cookieParser from 'cookie-parser';
 
 
@@ -33,12 +33,23 @@ app.options('/', (req, res) => {
     res.sendStatus(204);
 });
 
+const allowedOrigins = [
+    'http://localhost:3000',
+    'http://localhost:8081'
+];
+
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        } else {
+        callback(new Error('Origen no permitido por CORS'));
+        }
+    },
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT'],
     allowedHeaders: ['Content-Type', 'Authorization', 'credentials'],
-    credentials : true
-  }));
+    credentials: true
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
