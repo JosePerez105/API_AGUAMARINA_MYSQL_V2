@@ -144,7 +144,7 @@ export const checkAuth = async(req, res) => {
 };
 
 export const checkCookie = async(req, res) => {
-    const jwtCookie = req.cookies["jwt_ag"];
+    const jwtCookie = req.cookies["jwt_ag"] || req.body.token;
 
     if (jwtCookie) {
         try {
@@ -166,10 +166,10 @@ export const checkCookie = async(req, res) => {
         return res.status(200).json({
             ok : false,
             status : 200,
-            message : "Cookie Null"
+            message : "Cookie or Token Null"
         });
     }
-};
+};|| req.body.token
 
 
 export const forgotPassword = async (req, res) => {
