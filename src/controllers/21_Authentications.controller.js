@@ -169,7 +169,7 @@ export const checkCookie = async(req, res) => {
             message : "Cookie or Token Null"
         });
     }
-};|| req.body.token
+};
 
 
 export const forgotPassword = async (req, res) => {
@@ -189,7 +189,7 @@ export const forgotPassword = async (req, res) => {
 
         const payload = { id_user: user.id_user };
         const resetToken = jwt.sign(payload, process.env.SECRET_JWT, { expiresIn: '15m' });
-        const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
+        const resetLink = `${process.env.CLIENT_URL}/newPassword?token=${resetToken}`;
         
         const response = sendMailOptions(mail, "prueba", "Este es el Titulo", `<p>Haga clic en el siguiente enlace para restablecer su contraseña:</p><a class="btn-link" href="${resetLink}">Restablecer contraseña</a>`);
 
