@@ -43,7 +43,7 @@ export const validateLogin = async(req, res) => {
             const accessToken = generateAccessToken(payload)
             res.cookie('jwt_ag', accessToken, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
+                // secure: process.env.NODE_ENV === 'production',
                 maxAge: 12 * 60 * 60 * 1000,
                 sameSite: 'None'
             }) 
