@@ -14,8 +14,10 @@ import Rent from "./12_Rent.model.js";
 import PaymentRegister from "./13_PaymentRegister.model.js";
 import CheckList from "./14_CheckList.model.js";
 import CheckListItem from "./15_CheckListItem.model.js";
-import VerificationCode from "./19_VerificationCode.model.js";
 import Purchase from "./16_Purchase.model.js";
+import Loss from "./17_Losses.model.js";
+import VerificationCode from "./19_VerificationCode.model.js";
+
 
 
 // Relaciones entre Rol y Permission (Muchos a Muchos)
@@ -167,6 +169,26 @@ User.hasMany(Purchase, {
     as: "Purchase"
 });
 Purchase.belongsTo(User, {
+    foreignKey: "id_user",
+    as: "User"
+})
+
+//Relación entre Product y Loss (Uno a Muchos)
+Product.hasMany(Loss, {
+    foreignKey: "id_product",
+    as: "Loss"
+});
+Loss.belongsTo(Product, {
+    foreignKey: "id_product",
+    as: "Product"
+})
+
+//Relación entre User y Loss (Uno a Muchos)
+User.hasMany(Loss, {
+    foreignKey: "id_user",
+    as: "Loss"
+});
+Loss.belongsTo(User, {
     foreignKey: "id_user",
     as: "User"
 })

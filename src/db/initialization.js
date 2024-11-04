@@ -16,7 +16,7 @@ import PaymentRegister from "../models/13_PaymentRegister.model.js";
 import CheckList from "../models/14_CheckList.model.js";
 import CheckListItem from "../models/15_CheckListItem.model.js";
 import Purchase from "../models/16_Purchase.model.js";
-import PurchaseDetail from "../models/17_PurchaseDetail.model.js";
+import Loss from "../models/17_Losses.model.js";
 import User from "../models/18_User.model.js";
 import VerificationCode from "../models/19_VerificationCode.model.js";
 
@@ -40,7 +40,7 @@ await PaymentRegister.sync()
 await CheckList.sync()
 await CheckListItem.sync()
 await Purchase.sync()
-await PurchaseDetail.sync()
+await Loss.sync();
 await VerificationCode.sync() 
 
 //Relaciones necesarias  1:1  1:M  N:M

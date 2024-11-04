@@ -3,6 +3,7 @@ import Reservations from '../models/10_Reservation.model.js';
 import ReservationDetails from '../models/11_ReservationDetail.model.js';
 import Images from '../models/8_Image.model.js';
 import Categories from '../models/6_Category.model.js';
+import Purchases from '../models/16_Purchase.model.js';
 
 export const getProducts = async (req, res) => {
     const {start_date, end_date} = req.body
@@ -231,7 +232,7 @@ export const getProductsByCategory = async(req, res) => {
 };
 
 export const createProduct = async(req, res) => {
-    const {name, total_quantity, price, description, id_category, status} = req.body;
+    const {name, total_quantity, price, description, id_category, status = true} = req.body;
     try {
         const createdProduct = await Products.create({name, total_quantity, price, description, id_category, status});
         res.status(201).json({

@@ -1,35 +1,43 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "../db/sequelize.js";
 
-class PurchaseDetail extends Model {}
+class Loss extends Model {}
 
-PurchaseDetail.init({
-    id_purchasedetail: {
+Loss.init({
+    id_loss: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
-    id_purchase: {
+    id_product: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    id_product: {
+    id_user: {
         type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    loss_date: {
+        type: DataTypes.DATE,
         allowNull: false
     },
     quantity: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    price: {
-        type: DataTypes.DECIMAL,
-        allowNull: false
+    observations: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    status: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
     }
     }, {
     sequelize,
     timestamps: true,
-    modelName: "PurchaseDetail",
-    tableName: "PurchaseDetails"
+    modelName: "Loss",
+    tableName: "Losses"
 });
 
-export default PurchaseDetail;
+export default Loss;
