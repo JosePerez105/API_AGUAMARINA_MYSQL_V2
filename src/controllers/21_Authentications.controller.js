@@ -35,18 +35,18 @@ export const validateLogin = async(req, res) => {
                 lastnames : user.lastnames,
                 dni : user.dni,
                 mail : user.mail,
-                password : user.password,
+                // password : user.password,
                 phone_number : user.phone_number,
                 id_rol : user.id_rol,
                 status : user.status
             }
             const accessToken = generateAccessToken(payload)
-            res.cookie('jwt_ag', accessToken, {
-                httpOnly: true,
-                secure: false /*process.env.NODE_ENV === 'production'*/,
-                maxAge: 12 * 60 * 60 * 1000,
-                sameSite: 'None'
-            }) 
+            // res.cookie('jwt_ag', accessToken, {
+            //     httpOnly: true,
+            //     secure: false /*process.env.NODE_ENV === 'production'*/,
+            //     maxAge: 12 * 60 * 60 * 1000,
+            //     sameSite: 'None'
+            // }) 
             res.status(200).header('authorization', accessToken).json({
                     message : "Inicio de Sesión Correcto",
                     data : payload,
