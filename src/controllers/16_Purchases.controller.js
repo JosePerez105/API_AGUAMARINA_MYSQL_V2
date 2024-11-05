@@ -80,7 +80,7 @@ export const createPurchase = async(req, res) => {
         if (product) {
             const createdPurchase = await Purchases.create({id_product, id_user, purchase_date, quantity, unit_price, total_price, status: true});
             
-            product.total_quantity += quantity;
+            product.total_quantity += parseInt(quantity);
             await product.save();
 
             res.status(201).json({
@@ -131,7 +131,7 @@ export const denyPurchaseById = async(req, res) => {
         const product = await Product.findByPk(purchase.id_product);
         purchase.status = false;
         await purchase.save();
-        product.total_quantity -= purchase.quantity;
+        product.total_quantity -= parseInt(purchase.quantity);
         await product.save();
         let isDennied = true
 
