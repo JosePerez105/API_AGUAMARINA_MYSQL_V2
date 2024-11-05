@@ -8,7 +8,7 @@ router.post('/validate_token', [], validateToken); // Validar Token JWT (req.coo
 router.post('/validate_logout', [], validateLogout); // Cerrar Sesión (req.cookie)
 
 router.get('/check_auth', [], checkAuth); // Validar Sesión Iniciado (req.cookie)
-router.get('/check_cookie', [], checkCookie); // Obtener Payload de la Cookie (req.cookie)
+router.post('/check_cookie', [], checkCookie); // Obtener Payload de la Cookie (req.body)
 
 //Rutas de restablecimiento de contraseña
 router.post('/forgot_password', [], forgotPassword); // Enviar Correo de Reestablecimiento (req.body)

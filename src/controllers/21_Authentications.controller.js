@@ -144,7 +144,7 @@ export const checkAuth = async(req, res) => {
 };
 
 export const checkCookie = async(req, res) => {
-    const jwtCookie = req.cookies["jwt_ag"] || req.body.token;
+    const jwtCookie = req.body.token;
 
     if (jwtCookie) {
         try {

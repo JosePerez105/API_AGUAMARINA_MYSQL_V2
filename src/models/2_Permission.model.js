@@ -15,9 +15,6 @@ Permission.init({
     },
     description: {
         type: DataTypes.STRING
-    },
-    area: {
-        type: DataTypes.STRING
     }
     }, {
     sequelize,
