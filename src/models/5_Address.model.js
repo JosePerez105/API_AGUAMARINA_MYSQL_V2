@@ -21,8 +21,8 @@ Address.init({
         type: DataTypes.STRING,
         allowNull: false
     },
-    city: {
-        type: DataTypes.STRING,
+    id_city: {
+        type: DataTypes.INTEGER,
         allowNull: false
     },
     neighborhood: {

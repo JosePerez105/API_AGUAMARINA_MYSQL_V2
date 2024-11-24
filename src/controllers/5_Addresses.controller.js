@@ -54,9 +54,9 @@ export const getAddressesByUser = async(req, res) => {
 };
 
 export const createAddress = async(req, res) => {
-    const {id_user, name, address, city, neighborhood, reference} = req.body;
+    const {id_user, name, address, id_city, neighborhood, reference} = req.body;
     try {
-        const createdAddress = await Addresses.create({id_user, name, address, city, neighborhood, reference});
+        const createdAddress = await Addresses.create({id_user, name, address, id_city, neighborhood, reference});
         res.status(201).json({
             ok : true,
             status : 201,
@@ -75,9 +75,9 @@ export const createAddress = async(req, res) => {
 
 export const updateAddressById = async(req, res) => {
     const {id} = req.params;
-    const {id_user, name, address, city, neighborhood, reference} = req.body;
+    const {id_user, name, address, id_city, neighborhood, reference} = req.body;
     try {
-        const [updatedAddress] = await Addresses.update({id_user, name, address, city, neighborhood, reference}, {where : {id_address : id}});
+        const [updatedAddress] = await Addresses.update({id_user, name, address, id_city, neighborhood, reference}, {where : {id_address : id}});
         let isUpdated;
         updatedAddress <= 0 ? (isUpdated = false) : (isUpdated = true);
         res.status(200).json({
