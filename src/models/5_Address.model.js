@@ -13,6 +13,10 @@ Address.init({
         type: DataTypes.INTEGER,
         allowNull: false
     },
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     address: {
         type: DataTypes.STRING,
         allowNull: false
@@ -24,6 +28,9 @@ Address.init({
     neighborhood: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    reference: {
+        type: DataTypes.STRING,
     }
     }, {
     sequelize,

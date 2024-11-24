@@ -25,7 +25,7 @@ Reservation.init({
         type: DataTypes.STRING,
         allowNull: false
     },
-    city: {
+    city: { //Cambiar por id_city
         type: DataTypes.STRING,
         allowNull: false
     },

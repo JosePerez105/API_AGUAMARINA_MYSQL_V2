@@ -67,8 +67,9 @@ export const getReservationsByUser = async(req, res) => {
         });
     };
 };
+
 export const createReservation = async (req, res) => {
-    const { id_user, start_date, end_date, address, city, neighborhood, status, details = [] } = req.body;
+    const { id_user, start_date, end_date, address, city, neighborhood, reference, status= "En Espera", details = [] } = req.body;
 
     const transaction = await sequelize.transaction(); // Iniciar la transacción
 
@@ -81,6 +82,7 @@ export const createReservation = async (req, res) => {
             address,
             city,
             neighborhood,
+            reference,
             status
         }, { transaction });
 
@@ -133,9 +135,9 @@ export const createReservation = async (req, res) => {
 
 export const updateReservationById = async(req, res) => {
     const {id} = req.params;
-    const {id_user, start_date, end_date, adress, city, neighborhood, status} = req.body;
+    const {id_user, start_date, end_date, adress, city, neighborhood, reference, status} = req.body;
     try {
-        const [updatedReservation] = await Reservations.update({id_user, start_date, end_date, adress, city, neighborhood, status}, {where : {id_reservation : id}});
+        const [updatedReservation] = await Reservations.update({id_user, start_date, end_date, adress, city, neighborhood, reference, status}, {where : {id_reservation : id}});
         let isUpdated;
         updatedReservation <= 0 ? (isUpdated = false) : (isUpdated = true);
         res.status(200).json({
@@ -253,7 +255,6 @@ export const cancelReservationById = async(req, res) => {
         });
     }
 };
-
 
 export const sendMail = async(req,res) => {
     
