@@ -75,9 +75,9 @@ export const createAddress = async(req, res) => {
 
 export const updateAddressById = async(req, res) => {
     const {id} = req.params;
-    const {id_user, name, address, id_city, neighborhood, reference} = req.body;
+    const {name, address, id_city, neighborhood, reference} = req.body;
     try {
-        const [updatedAddress] = await Addresses.update({id_user, name, address, id_city, neighborhood, reference}, {where : {id_address : id}});
+        const [updatedAddress] = await Addresses.update({name, address, id_city, neighborhood, reference}, {where : {id_address : id}});
         let isUpdated;
         updatedAddress <= 0 ? (isUpdated = false) : (isUpdated = true);
         res.status(200).json({
