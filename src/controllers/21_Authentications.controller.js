@@ -40,7 +40,7 @@ export const validateLogin = async(req, res) => {
                 id_rol : user.id_rol,
                 status : user.status
             }
-            const accessToken = generateAccessToken(payload)
+            const accessToken = generateAccessToken(payload.id_user)
             // res.cookie('jwt_ag', accessToken, {
             //     httpOnly: true,
             //     secure: false /*process.env.NODE_ENV === 'production'*/,
