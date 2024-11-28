@@ -49,7 +49,7 @@ export const validateLogin = async(req, res) => {
             // }) 
             res.status(200).header('authorization', accessToken).json({
                     message : "Inicio de Sesión Correcto",
-                    data : payload,
+                    data : payload.id_user,
                     token : accessToken,
                     logged : true
                 }
