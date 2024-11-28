@@ -1,6 +1,8 @@
 import Users from '../models/18_User.model.js';
 import Roles from '../models/1_Rol.model.js';
 import bcrypt from "bcrypt"
+import Permission from '../models/2_Permission.model.js';
+import RolPermissions from '../models/3_RolPermissions.model.js';
 
 export const getUsers = async(req, res) => {
     const allUsers = await Users.findAll();
@@ -28,8 +30,13 @@ export const getUserById = async(req, res) => {
     const {id} = req.params;
     try {
         const users = await Users.findByPk(id);
-        const rol = await Roles.findByPk(users.id_rol)
+        const rol = await Roles.findByPk(users.id_rol);
+        const idsPermissions = await RolPermissions.findAll({where: {id_rol : users.id_rol}});
+        const permissions = await Promise.all(idsPermissions.map(async (per) => {
+            return await Permission.findByPk(per.id_permission);
+        }));
         users.setDataValue('rol', rol);
+        users.setDataValue('permissions', permissions)
         res.status(200).json({
             ok : true,
             status : 200,

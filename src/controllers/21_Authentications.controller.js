@@ -73,7 +73,6 @@ export function generateAccessToken(payload) {
     return  jwt.sign(payload, process.env.SECRET_JWT, {expiresIn : '12h'})
 }
 
-
 export const validateToken = (req, res, next) => {
     const token = req.cookies.jwt_ag || req.headers['authorization'] || req.body.token;
   
@@ -171,7 +170,6 @@ export const checkCookie = async(req, res) => {
     }
 };
 
-
 export const forgotPassword = async (req, res) => {
     const { mail } = req.body;
 
@@ -208,7 +206,6 @@ export const forgotPassword = async (req, res) => {
         });
     }
 };
-
 
 export const resetPassword = async (req, res) => {
     const { token, newPassword } = req.body;
@@ -251,3 +248,59 @@ export const resetPassword = async (req, res) => {
     }
 };
 
+export const getRolAndPermissionsByUser = async (req, res) => {
+    const {id_user} = req.params;
+    try {
+        const user = await Users.findByPk(id_user)
+        if (users.length <= 0) {
+            return res.status(200).json({
+                message : "No existe una cuenta con este correo",
+                logged : false
+            })
+        }
+        const active = user.status
+
+        
+        const isMatch =  await bcrypt.compare(passwordStr, user.password)
+        if (isMatch) {
+            if(!active) {
+                return res.status(200).json({
+                    message : "No puedes iniciar sesión ahora, tu usuario está Inhabilitado",
+                    logged : false
+                })
+            }
+            
+            const payload = {
+                id_user : user.id_user,
+                names : user.names,
+                lastnames : user.lastnames,
+                dni : user.dni,
+                mail : user.mail,
+                // password : user.password,
+                phone_number : user.phone_number,
+                id_rol : user.id_rol,
+                status : user.status
+            }
+            const accessToken = generateAccessToken({id_user : payload.id_user})
+            res.status(200).header('authorization', accessToken).json({
+                    message : "Inicio de Sesión Correcto",
+                    data : {id_user : payload.id_user, id_rol : payload.id_rol},
+                    token : accessToken,
+                    logged : true
+                }
+            )
+        } else {
+            await res.status(400).json({
+                message : "Contraseña Incorrecta",
+                logged : false
+            })
+        }
+    } catch(err) {
+        res.status(400).json({
+            ok : false,
+            status : 400,
+            error : err.message || err
+        });
+    };
+
+}
