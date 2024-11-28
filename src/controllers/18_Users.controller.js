@@ -32,11 +32,16 @@ export const getUserById = async(req, res) => {
         const users = await Users.findByPk(id);
         const rol = await Roles.findByPk(users.id_rol);
         const idsPermissions = await RolPermissions.findAll({where: {id_rol : users.id_rol}});
+        let accessDashboard = false;
         const permissions = await Promise.all(idsPermissions.map(async (per) => {
+            if(per.id_permission == 1) {
+                accessDashboard = true;
+            }
             return await Permission.findByPk(per.id_permission);
         }));
         users.setDataValue('rol', rol);
-        users.setDataValue('permissions', permissions)
+        users.setDataValue('permissions', permissions);
+        users.setDataValue('accessDashboard', accessDashboard);
         res.status(200).json({
             ok : true,
             status : 200,
