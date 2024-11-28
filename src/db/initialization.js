@@ -72,16 +72,15 @@ if (cantidadCiudades.count <= 0) {
 const cantidadPermissions = await Permission.findAndCountAll();
 if (cantidadPermissions.count <= 0) {
     const Permissions = [
-        {name : "Acceso al Dashboard", description : "Puede entrar al Dashboard y según los permisos asociados puede actuar dentro del Dashboard", area: "Dashboard"}, //1
+        {name : "Acceso al Dashboard", description : "Puede entrar al Dashboard y según los permisos asociados puede actuar dentro del Dashboard"}, //1
         {name : "Usuarios", description : "Tiene permisos para acceder a las funciones de Usuarios"}, //2
         {name : "Roles", description : "Tiene permisos para acceder a las funciones de Roles"}, //3
-        {name : "Productos", description : "Tiene permisos para acceder a las funciones de Productos"}, //4
-        {name : "Reservas", description : "Tiene permisos para acceder a las funciones de Reservas"}, //5
-        {name : "Alquileres", description : "Tiene permisos para acceder a las funciones de Alquileres"}, //6
-        {name : "Compras", description : "Tiene permisos para acceder a las funciones de Compras"}, //7
-        {name : "Perdidas", description : "Tiene permisos para acceder a las funciones de Pérdidas"}, //8
-        {name : "Pagos y Comprobantes", description : "PTiene permisos para acceder a las funciones de Pagos y Comprobantes"}, //9
-        {name : "Agenda", description : "Tiene permisos para acceder a las funciones de Agenda"}, //10
+        {name : "Ciudades y Municipios", description : "Tiene permisos para acceder a las funciones de Ciudades y Municipios"}, //4
+        {name : "Productos", description : "Tiene permisos para acceder a las funciones de Productos"}, //5
+        {name : "Reservas", description : "Tiene permisos para acceder a las funciones de Reservas"}, //6
+        {name : "Perdidas", description : "Tiene permisos para acceder a las funciones de Pérdidas"}, //7
+        {name : "Pagos y Comprobantes", description : "PTiene permisos para acceder a las funciones de Pagos y Comprobantes"}, //8
+        {name : "Agenda", description : "Tiene permisos para acceder a las funciones de Agenda"}, //9
     ];
     Permissions.map(async(per) => await Permission.create(per));
     console.log("Todos los Permisos Creados")
