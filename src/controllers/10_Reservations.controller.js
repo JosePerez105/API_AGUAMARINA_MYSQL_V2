@@ -2,6 +2,8 @@ import Reservations from '../models/10_Reservation.model.js'
 import Details from '../models/11_ReservationDetail.model.js'
 import Products from '../models/7_Product.model.js';
 import sequelize from '../db/sequelize.js';
+import Address from '../models/5_Address.model.js';
+import dayjs from 'dayjs';
 
 export const getReservations = async(req, res) => {
     const allReservations = await Reservations.findAll();
@@ -69,20 +71,25 @@ export const getReservationsByUser = async(req, res) => {
 };
 
 export const createReservation = async (req, res) => {
-    const { id_user, start_date, end_date, address, city, neighborhood, reference, status= "En Espera", details = [] } = req.body;
+    const { id_user, start_date, end_date, id_address, status= "En Espera", details = [] } = req.body;
 
-    const transaction = await sequelize.transaction(); // Iniciar la transacción
+    const transaction = await sequelize.transaction();
+    const address = await Address.findByPk(id_address);
 
     try {
-        // Crear la reserva
+        const start = dayjs(start_date);
+        const end = dayjs(end_date);
+        const res_days = end.diff(start, "day") + 1 //Cantidad de dias de la duración de la reserva
+        const three_days_range = Math.ceil(res_days / 3) //Cobrar el valor cada 3 dias de alquiler
+
         const createdReservation = await Reservations.create({
             id_user,
             start_date,
             end_date,
-            address,
-            city,
-            neighborhood,
-            reference,
+            address : address.address,
+            city : address.city,
+            neighborhood : address.neighborhood,
+            reference : address.reference,
             status
         }, { transaction });
 
