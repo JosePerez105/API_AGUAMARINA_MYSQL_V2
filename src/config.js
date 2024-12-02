@@ -30,3 +30,5 @@ export const PASS_APP_GMAIL = process.env.PASS_APP_GMAIL;
 
 //Variables de FrontEnd
 export const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:3000"
+
+export const PRODUCTS_ENDPOINT = process.env.PRODUCTS_ENDPOINT;

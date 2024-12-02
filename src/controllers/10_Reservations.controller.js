@@ -6,12 +6,13 @@ import Address from '../models/5_Address.model.js';
 import City from "../models/4_City.model.js";
 import Image from "../models/8_Image.model.js";
 import dayjs from 'dayjs';
+import User from '../models/18_User.model.js';
 
 export const getReservations = async(req, res) => {
     const allReservations = await Reservations.findAll();
     try {
-        const reservations = await Promise.all(allReservations.map(async (res) => {
-            const details = await Details.findAll({ where: { id_reservation: res.id_reservation } });
+        const reservations = await Promise.all(allReservations.map(async (reserva) => {
+            const details = await Details.findAll({ where: { id_reservation: reserva.id_reservation } });
 
 
             await Promise.all(details.map(async (detail) => {
@@ -20,9 +21,12 @@ export const getReservations = async(req, res) => {
                 detail.setDataValue('urls', urls);
             }));
 
+            const user = await User.findByPk(reserva.id_user);
+            const fullname = user.names + " " + user.lastnames;
+            reserva.setDataValue('name_client', fullname);
 
-            res.setDataValue('details', details);
-            return res;
+            reserva.setDataValue('details', details);
+            return reserva;
         }));
         res.status(200).json({
             ok : true,
@@ -44,6 +48,9 @@ export const getReservationById = async(req, res) => {
         const reservation = await Reservations.findByPk(id);
         const details = await Details.findAll({ where: { id_reservation: reservation.id_reservation } });
         reservation.setDataValue('details', details);
+        const user = await User.findByPk(res.id_user);
+            const name = user.name;
+            res.setDataValue('name_client', name);
         res.status(200).json({
             ok : true,
             status : 200,
