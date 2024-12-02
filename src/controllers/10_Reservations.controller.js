@@ -4,6 +4,7 @@ import Products from '../models/7_Product.model.js';
 import sequelize from '../db/sequelize.js';
 import Address from '../models/5_Address.model.js';
 import City from "../models/4_City.model.js";
+import Image from "../models/8_Image.model.js";
 import dayjs from 'dayjs';
 
 export const getReservations = async(req, res) => {
@@ -11,6 +12,15 @@ export const getReservations = async(req, res) => {
     try {
         const reservations = await Promise.all(allReservations.map(async (res) => {
             const details = await Details.findAll({ where: { id_reservation: res.id_reservation } });
+
+
+            await Promise.all(details.map(async (detail) => {
+                const paths = await Image.findAll({where : {id_product : detail.id_product}});
+                const urls = paths.map(img => img.path_image);
+                detail.setDataValue('urls', urls);
+            }));
+
+
             res.setDataValue('details', details);
             return res;
         }));
