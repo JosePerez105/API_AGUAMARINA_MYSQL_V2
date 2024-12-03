@@ -10,7 +10,7 @@ router.post('/reservations', [], createReservation); // Crear (req.body)
 router.put('/reservations/:id', [], updateReservationById); // Editar (req.params y req.body)
 router.delete('/reservations/:id', [], deleteReservationById); // Eliminar (req.params)
 
-router.get('/reservations_approve/:id', [], approveReservationById); // Aprobar (req.params)
+router.patch('/reservations_approve/:id', [], approveReservationById); // Aprobar (req.params)
 router.patch('/reservations_deny/:id', [], denyReservationById); // Denegar (req.params y req.body)
 router.patch('/reservations_cancel/:id', [], cancelReservationById); // Cancelar (req.params req.body)
 
