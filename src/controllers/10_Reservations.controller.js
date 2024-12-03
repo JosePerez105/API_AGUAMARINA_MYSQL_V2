@@ -233,9 +233,10 @@ export const approveReservationById = async(req, res) => {
 
 export const denyReservationById = async(req, res) => {
     const {id} = req.params;
+    const {cancel_reason} = req.body;
     const newStatus = "Denegado"
     try {
-        const [denniedReservation] = await Reservations.update({status : newStatus}, {where : {id_reservation : id}});
+        const [denniedReservation] = await Reservations.update({status : newStatus, cancel_reason : cancel_reason}, {where : {id_reservation : id}});
         let isDennied;
         denniedReservation <= 0 ? (isDennied = false) : (isDennied = true);
         res.status(200).json({
@@ -258,9 +259,10 @@ export const denyReservationById = async(req, res) => {
 
 export const cancelReservationById = async(req, res) => {
     const {id} = req.params;
+    const {cancel_reason} = req.body;
     const newStatus = "Cancelado"
     try {
-        const [canceledReservation] = await Reservations.update({status : newStatus}, {where : {id_reservation : id}});
+        const [canceledReservation] = await Reservations.update({status : newStatus, cancel_reason : cancel_reason}, {where : {id_reservation : id}});
         let isCanceled;
         canceledReservation <= 0 ? (isCanceled = false) : (isCanceled = true);
         res.status(200).json({

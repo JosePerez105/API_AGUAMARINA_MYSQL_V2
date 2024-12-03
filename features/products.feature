@@ -12,12 +12,11 @@ Feature: API of products
     Then the disponibility of all products should not be negative
 
 
-  # Scenario: Get product by ID
-  # Given I have the endpoint "https://api-aguamarina-mysql-v2.onrender.com/api/v2/products/1"
-  # When I send a GET request to the endpoint
-  # Then the response status should be 200
-  # And the response body should contain a list of products
-  # Then the disponibility of all products should not be negative
-  # Then the disponibility of all products should not be negative
+  Scenario: Get product by ID
+  Given I have the endpoint "https://api-aguamarina-mysql-v2.onrender.com/api/v2/products/1"
+  When I send a GET request to the endpoint
+  Then the response status should be 200
+  And the response body should contain a list of products
+  Then the disponibility of all products should not be negative
+  Then the disponibility of all products should not be negative
 
-  
