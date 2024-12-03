@@ -208,7 +208,7 @@ export const deleteReservationById = async(req, res) => {
 
 export const approveReservationById = async(req, res) => {
     const {id} = req.params;
-    const newStatus = "Aprobado"
+    const newStatus = "Aprobada"
     try {
         const [approvedReservation] = await Reservations.update({status : newStatus}, {where : {id_reservation : id}});
         let isApproved;
@@ -234,7 +234,7 @@ export const approveReservationById = async(req, res) => {
 export const denyReservationById = async(req, res) => {
     const {id} = req.params;
     const {cancel_reason} = req.body;
-    const newStatus = "Denegado"
+    const newStatus = "Denegada"
     try {
         const [denniedReservation] = await Reservations.update({status : newStatus, cancel_reason : cancel_reason}, {where : {id_reservation : id}});
         let isDennied;
@@ -260,7 +260,7 @@ export const denyReservationById = async(req, res) => {
 export const cancelReservationById = async(req, res) => {
     const {id} = req.params;
     const {cancel_reason} = req.body;
-    const newStatus = "Cancelado"
+    const newStatus = "Cancelada"
     try {
         const [canceledReservation] = await Reservations.update({status : newStatus, cancel_reason : cancel_reason}, {where : {id_reservation : id}});
         let isCanceled;
@@ -282,6 +282,62 @@ export const cancelReservationById = async(req, res) => {
         });
     }
 };
+
+export const annularReservationById = async(req, res) => {
+    const {id} = req.params;
+    const {cancel_reason} = req.body;
+    const newStatus = "Anulada"
+
+    try {
+        const [annulledReservation] = await Reservations.update({status : newStatus, cancel_reason : cancel_reason}, {where : {id_reservation : id}});
+        let isAnnulled;
+        annulledReservation <= 0 ? (isAnnulled = false) : (isAnnulled = true);
+        res.status(200).json({
+            ok : true,
+            status : 200,
+            message : "Annulled Reservation",
+            body : {
+                affectedRows : annulledReservation,
+                isAnnulled
+            }
+        });
+    } catch (err) {
+        res.status(400).json({
+            ok : false,
+            status : 400,
+            err
+        });
+    }
+
+
+}
+
+export const finalizeReservationById = async(req, res) => {
+    const {id} = req.params;
+    const newStatus = "Finalizada"
+
+    try {
+        const [finalizedReservation] = await Reservations.update({status : newStatus}, {where : {id_reservation : id}});
+        let isFinalized;
+        finalizedReservation <= 0 ? (isFinalized = false) : (isFinalized = true);
+        res.status(200).json({
+            ok : true,
+            status : 200,
+            message : "Finalized Reservation",
+            body : {
+                affectedRows : finalizedReservation,
+                isFinalized
+            }
+        });
+    } catch (err) {
+        res.status(400).json({
+            ok : false,
+            status : 400,
+            err
+        });
+    }
+
+}
 
 export const sendMail = async(req,res) => {
     

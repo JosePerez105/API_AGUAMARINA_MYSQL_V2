@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { approveReservationById, cancelReservationById, createReservation, deleteReservationById, denyReservationById, getReservationById, getReservations, getReservationsByUser, updateReservationById } from "../controllers/10_Reservations.controller.js";
+import { annularReservationById, approveReservationById, cancelReservationById, createReservation, deleteReservationById, denyReservationById, finalizeReservationById, getReservationById, getReservations, getReservationsByUser, updateReservationById } from "../controllers/10_Reservations.controller.js";
 
 const router = Router();
 
@@ -13,5 +13,7 @@ router.delete('/reservations/:id', [], deleteReservationById); // Eliminar (req.
 router.patch('/reservations_approve/:id', [], approveReservationById); // Aprobar (req.params)
 router.patch('/reservations_deny/:id', [], denyReservationById); // Denegar (req.params y req.body)
 router.patch('/reservations_cancel/:id', [], cancelReservationById); // Cancelar (req.params req.body)
+router.patch('/reservations_annular/:id', [], annularReservationById); // Anular (req.params req.body)
+router.patch('/reservations_finalize/:id', [], finalizeReservationById); // Finalizar (req.params req.body)
 
 export default router;
