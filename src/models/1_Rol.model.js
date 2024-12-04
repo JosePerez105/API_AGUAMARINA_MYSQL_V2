@@ -16,9 +16,6 @@ Rol.init({
     },
     description: {
         type: DataTypes.STRING
-    },
-    color: {
-        type: DataTypes.STRING
     }
     }, {
     sequelize,

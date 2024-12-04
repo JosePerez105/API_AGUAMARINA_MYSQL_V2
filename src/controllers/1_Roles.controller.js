@@ -54,9 +54,9 @@ export const getRolById = async(req, res) => {
 };
 
 export const createRol = async(req, res) => {
-    const {name, description, color, permissions} = req.body;
+    const {name, description, permissions} = req.body;
     try {
-        const createdRol = await Roles.create({name, description, color});
+        const createdRol = await Roles.create({name, description});
         permissions.map(async(per) => await RolPermissions.create({id_rol : createdRol.id_rol, id_permission : per}));
         res.status(201).json({
             ok : true,
@@ -76,9 +76,9 @@ export const createRol = async(req, res) => {
 
 export const updateRolById = async(req, res) => {
     const {id} = req.params;
-    const {name, description, color} = req.body;
+    const {name, description} = req.body;
     try {
-        const [updatedRol] = await Roles.update({name, description, color}, {where : {id_rol : id}});
+        const [updatedRol] = await Roles.update({name, description}, {where : {id_rol : id}});
         let isUpdated;
         updatedRol <= 0 ? (isUpdated = false) : (isUpdated = true);
         res.status(200).json({

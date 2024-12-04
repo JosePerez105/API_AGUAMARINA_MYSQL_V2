@@ -48,8 +48,8 @@ import '../models/0_Asossiations.js'
 
 const cantidadRoles = await Rol.findAndCountAll();
 if (cantidadRoles.count <= 0) {
-    await Rol.create({name : "Admin", description : "Tiene TODOS los permisos dentro del aplicativo", color : "#53bce5"}).then(() => {console.log("Rol Admin Creado Correctamente");});
-    await Rol.create({name: "Cliente", description: "Solo puede ver ciertas cosas de cliente", color: "#52c41a"}).then(() => {console.log("Rol Cliente Creado Correctamente");});
+    await Rol.create({name : "Admin", description : "Tiene TODOS los permisos dentro del aplicativo"}).then(() => {console.log("Rol Admin Creado Correctamente");});
+    await Rol.create({name: "Cliente", description: "Solo puede ver ciertas cosas de cliente"}).then(() => {console.log("Rol Cliente Creado Correctamente");});
 };
 
 const cantidadCiudades = await City.findAndCountAll();
