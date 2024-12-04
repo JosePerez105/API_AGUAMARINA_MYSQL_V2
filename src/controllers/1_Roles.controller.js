@@ -1,9 +1,19 @@
 import Roles from "../models/1_Rol.model.js";
+import Permission from "../models/2_Permission.model.js";
 import RolPermissions from "../models/3_RolPermissions.model.js";
 
 export const getRoles = async(req, res) => {
     try {
         const roles = await Roles.findAll();
+
+        await Promise.all(roles.map(async (rol) => {
+            const idsPermissions = await RolPermissions.findAll({where: {id_rol : rol.id_rol}});
+            const permissions = await Promise.all(idsPermissions.map(async (per) => {
+                return await Permission.findByPk(per.id_permission);
+            }))
+            rol.setDataValue('permissions', permissions);
+        }))
+
         res.status(200).json({
             ok : true,
             status : 200,
@@ -22,6 +32,13 @@ export const getRolById = async(req, res) => {
     const {id} = req.params;
     try {
         const rol = await Roles.findByPk(id);
+
+        const idsPermissions = await RolPermissions.findAll({where: {id_rol : rol.id_rol}});
+        const permissions = await Promise.all(idsPermissions.map(async (per) => {
+            return await Permission.findByPk(per.id_permission);
+        }))
+        rol.setDataValue('permissions', permissions);
+
         res.status(200).json({
             ok : true,
             status : 200,
