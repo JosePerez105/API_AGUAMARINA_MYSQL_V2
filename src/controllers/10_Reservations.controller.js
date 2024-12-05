@@ -20,7 +20,9 @@ export const getReservations = async(req, res) => {
 
             await Promise.all(details.map(async (detail) => {
                 const paths = await Image.findAll({where : {id_product : detail.id_product}});
+                const product = await Product.findByPk(detail.id_product);
                 const urls = paths.map(img => img.path_image);
+                detail.setDataValue('name', product.name);
                 detail.setDataValue('urls', urls);
             }));
 
