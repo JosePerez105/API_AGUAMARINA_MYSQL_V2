@@ -4,11 +4,10 @@ import Product from '../models/7_Product.model.js';
 
 export const getLosses = async(req, res) => {
     try {
-        const allLosses = await Losses.findAll();
-        const losses = await Promise.all(allLosses.map(async (loss) => {
+        const losses = await Losses.findAll();
+        await Promise.all(losses.map(async (loss) => {
             const lossDetails = await LossDetail.findAll({ where: { id_loss: loss.id_loss }});
             loss.setDataValue('lossDetails', lossDetails);
-            return lossDetails;
         }));
 
         res.status(200).json({
