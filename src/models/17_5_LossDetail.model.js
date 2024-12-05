@@ -15,10 +15,6 @@ LossDetail.init({
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    status: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true
-    }
     }, {
     sequelize,
     timestamps: true,

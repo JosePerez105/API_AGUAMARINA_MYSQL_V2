@@ -9,6 +9,7 @@ import dayjs from 'dayjs';
 import User from '../models/18_User.model.js';
 import Loss from '../models/17_Loss.model.js';
 import LossDetail from '../models/17_5_LossDetail.model.js';
+import Product from '../models/7_Product.model.js';
 
 export const getReservations = async(req, res) => {
     const allReservations = await Reservations.findAll();
@@ -316,7 +317,7 @@ export const annularReservationById = async(req, res) => {
 
 export const finalizeReservationById = async(req, res) => {
     const {id} = req.params;
-    const {id_user, lossesList, observations, loss_date} = req.body; //{id_user, [{id_product, quantity, status=true}]}
+    const {id_user, lossesList, observations, loss_date} = req.body; //{id_user, [{id_product, quantity}]}
 
     const newStatus = "Finalizada"
 
@@ -338,6 +339,10 @@ export const finalizeReservationById = async(req, res) => {
                 quantity : detail.quantity
             };
             const createdDetail = await LossDetail.create(dataDetail);
+            const product = await Product.findByPk(dataDetail.id_product);
+
+            product.total_quantity -= parseInt(detail.quantity);
+            await product.save();
             return createdDetail;
         }))
 

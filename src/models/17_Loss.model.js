@@ -21,6 +21,10 @@ Loss.init({
         type: DataTypes.STRING,
         allowNull: true
     },
+    status: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+    }
     }, {
     sequelize,
     timestamps: true,

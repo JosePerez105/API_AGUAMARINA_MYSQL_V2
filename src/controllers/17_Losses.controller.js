@@ -1,3 +1,4 @@
+import LossDetail from '../models/17_5_LossDetail.model.js';
 import Losses from '../models/17_Loss.model.js';
 import Product from '../models/7_Product.model.js';
 
@@ -73,31 +74,40 @@ export const getLossesByProduct = async(req, res) => {
 };
 
 export const createLoss = async(req, res) => {
-    const {id_product, id_user, loss_date, quantity, observations} = req.body;
+
+    const {id_user, lossesList, observations, loss_date} = req.body; //{id_user, [{id_product, quantity, status=true}], observations, loss_date}
+
     try {
-        const product = await Product.findByPk(id_product);
-        if (product) {
-            const createdLoss = await Losses.create({id_product, id_user, loss_date, quantity, observations, status: true});
-            
-            product.total_quantity -= quantity;
-            await product.save();
 
-            res.status(201).json({
-                ok : true,
-                status : 201,
-                message : "Created Loss",
-                body : createdLoss
-            });
-            return;
-        }
-        
-
-        res.status(400).json({
-            ok : false,
-            status : 400,
-            message : "No se ha encontrado un producto con ese ID para registrar la pérdida",
-            body : []
+        const lossCreated = await Loss.create({
+            id_user,
+            loss_date,
+            observations
         });
+
+        const createdLossDetails = await Promise.all(lossesList.map(async(detail) =>{
+            const dataDetail = {
+                id_loss : lossCreated.id_loss,
+                id_product : detail.id_product,
+                quantity : detail.quantity
+            };
+            const createdDetail = await LossDetail.create(dataDetail);
+            const product = await Product.findByPk(dataDetail.id_product);
+
+            product.total_quantity -= parseInt(detail.quantity);
+            await product.save();
+            return createdDetail;
+        }))
+        
+        lossCreated.setDataValue('lossDetails', createdLossDetails);
+
+        res.status(201).json({
+            ok : true,
+            status : 201,
+            message : "Created Loss",
+            body : lossCreated
+        });
+        return;
         
         
     } catch(err) {
@@ -111,8 +121,10 @@ export const createLoss = async(req, res) => {
 
 export const denyLossById = async(req, res) => {
     const {id} = req.params;
+    let isDennied = true
     try {
         const loss = await Losses.findByPk(id);
+        const lossDetails = await LossDetail.findAll({where: {id_loss : id}});
 
         if (loss.status == false) {
             res.status(400).json({
@@ -125,14 +137,18 @@ export const denyLossById = async(req, res) => {
                 }
             });
             return;
+        } else {
+            const denniedLoss = await Promise.all(lossDetails.map(async(detail) =>{
+                const lossDetail = await LossDetail.findByPk(dataDetail);
+                const product = await Product.findByPk(lossDetail.id_product);
+    
+                product.total_quantity += parseInt(lossDetail.quantity);
+                await product.save();
+                return lossDetail;
+            }))
+            loss.setDataValue('lossDetails', denniedLoss);
         }
-
-        const product = await Product.findByPk(loss.id_product);
-        loss.status = false;
-        await loss.save();
-        product.total_quantity += loss.quantity;
-        await product.save();
-        let isDennied = true
+        
 
         res.status(201).json({
             ok : true,
