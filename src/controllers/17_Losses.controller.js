@@ -1,4 +1,4 @@
-import Losses from '../models/17_Losses.model.js';
+import Losses from '../models/17_Loss.model.js';
 import Product from '../models/7_Product.model.js';
 
 export const getLosses = async(req, res) => {

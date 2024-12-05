@@ -15,7 +15,8 @@ import PaymentRegister from "./13_PaymentRegister.model.js";
 import CheckList from "./14_CheckList.model.js";
 import CheckListItem from "./15_CheckListItem.model.js";
 import Purchase from "./16_Purchase.model.js";
-import Loss from "./17_Losses.model.js";
+import Loss from "./17_Loss.model.js";
+import LossDetail from "./17_5_LossDetail.model.js";
 import VerificationCode from "./19_VerificationCode.model.js";
 
 
@@ -192,3 +193,16 @@ Loss.belongsTo(User, {
     foreignKey: "id_user",
     as: "User"
 })
+
+
+
+
+//Relación entre Loss y LossDetails (Uno a Muchos)
+Loss.hasMany(LossDetail, {
+    foreignKey: "id_loss",
+    as: "LossDetail"
+});
+LossDetail.belongsTo(Loss, {
+    foreignKey: "id_loss",
+    as: "Loss"
+});

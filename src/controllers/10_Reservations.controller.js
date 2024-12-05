@@ -7,6 +7,8 @@ import City from "../models/4_City.model.js";
 import Image from "../models/8_Image.model.js";
 import dayjs from 'dayjs';
 import User from '../models/18_User.model.js';
+import Loss from '../models/17_Loss.model.js';
+import LossDetail from '../models/17_5_LossDetail.model.js';
 
 export const getReservations = async(req, res) => {
     const allReservations = await Reservations.findAll();
@@ -314,18 +316,39 @@ export const annularReservationById = async(req, res) => {
 
 export const finalizeReservationById = async(req, res) => {
     const {id} = req.params;
+    const {id_user, lossesList, observations, loss_date} = req.body; //{id_user, [{id_product, quantity, status=true}]}
+
     const newStatus = "Finalizada"
 
     try {
         const [finalizedReservation] = await Reservations.update({status : newStatus}, {where : {id_reservation : id}});
         let isFinalized;
         finalizedReservation <= 0 ? (isFinalized = false) : (isFinalized = true);
+
+        const lossCreated = await Loss.create({
+            id_user,
+            loss_date,
+            observations
+        });
+
+        const createdLossDetails = await Promise.all(lossesList.map(async(detail) =>{
+            const dataDetail = {
+                id_loss : lossCreated.id_loss,
+                id_product : detail.id_product,
+                quantity : detail.quantity
+            };
+            const createdDetail = await LossDetail.create(dataDetail);
+            return createdDetail;
+        }))
+
+
         res.status(200).json({
             ok : true,
             status : 200,
             message : "Finalized Reservation",
             body : {
                 affectedRows : finalizedReservation,
+                lossDetails : createdLossDetails,
                 isFinalized
             }
         });
