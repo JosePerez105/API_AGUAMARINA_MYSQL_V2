@@ -38,7 +38,7 @@ export const getProducts = async (req, res) => {
                 return (
                     new Date(res.start_date) <= end &&
                     new Date(res.end_date) >= start &&
-                    (res.status == "En Espera" || res.status == "Aprobada")
+                    (res.status == "Aprobada")
                 );
             })
             .map((res) => res.id_reservation);

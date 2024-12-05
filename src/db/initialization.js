@@ -65,6 +65,16 @@ if (cantidadCiudades.count <= 0) {
         {name: "La Estrella"}, //6
         {name: "Girardota"}, //7
         {name: "Barbosa"}, //8
+        {name: "Rionegro"}, //9
+        {name: "Llano Grande"}, //10
+        {name: "Guatapé"}, //
+        {name: "La Unión"}, //12
+        {name : "Caldas"}, //13
+        {name : "San Cristóbal"}, //14
+        {name : "San Félix"}, //15
+        {name : "San Antonio de Prado"}, //16
+        {name : "Guarne"}, //17
+        {name : "Marinilla"}, //18
     ]
     Cities.map(async(city) => await City.create(city));
     console.log("Todas las Ciudades Creadas")
