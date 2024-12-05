@@ -3,8 +3,14 @@ import Losses from '../models/17_Loss.model.js';
 import Product from '../models/7_Product.model.js';
 
 export const getLosses = async(req, res) => {
-    const losses = await Losses.findAll();
     try {
+        const allLosses = await Losses.findAll();
+        const losses = await Promise.all(allLosses.map(async (loss) => {
+            const lossDetails = await LossDetail.findAll({ where: { id_loss: loss.id_loss }});
+            loss.setDataValue('lossDetails', lossDetails);
+            return lossDetails;
+        }));
+
         res.status(200).json({
             ok : true,
             status : 200,
@@ -22,7 +28,9 @@ export const getLosses = async(req, res) => {
 export const getLossById = async(req, res) => {
     const {id} = req.params;
     try {
-        const losses = await Loss.findByPk(id);
+        const losses = await Losses.findByPk(id);
+        const lossDetails = await LossDetail.findAll({where : {id_loss : id}});
+        losses.setDataValue('lossDetails', lossDetails);
         res.status(200).json({
             ok : true,
             status : 200,
@@ -40,7 +48,12 @@ export const getLossById = async(req, res) => {
 export const getLossesByUser = async(req, res) => {
     const {id} = req.params;
     try {
-        const losses = await Losses.findAll({where : {id_user : id}});
+        const allLosses = await Losses.findAll({where : {id_user : id}});
+        const losses = await Promise.all(allLosses.map(async (loss) => {
+            const lossDetails = await LossDetail.findAll({ where: { id_loss: loss.id_loss }});
+            loss.setDataValue('lossDetails', lossDetails);
+            return lossDetails;
+        }));
         res.status(200).json({
             ok : true,
             status : 200,
@@ -58,11 +71,12 @@ export const getLossesByUser = async(req, res) => {
 export const getLossesByProduct = async(req, res) => {
     const {id} = req.params;
     try {
-        const losses = await Losses.findAll({where : {id_product : id}});
+        const lossDetails = await LossDetail.findAll({ where: { id_product: id }});
+        
         res.status(200).json({
             ok : true,
             status : 200,
-            body : losses
+            body : lossDetails
         });
     } catch(err) {
         res.status(400).json({

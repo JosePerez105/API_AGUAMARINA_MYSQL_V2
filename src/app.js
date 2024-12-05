@@ -17,6 +17,7 @@ import paymentRegistersRoutes from './routes/13_PaymentRegisters.routes.js';
 import checkListsRoutes from './routes/14_CheckLists.routes.js';
 import checkListItemsRoutes from './routes/15_CheckListItems.routes.js';
 import purchasesRoutes from './routes/16_Purchases.routes.js';
+import lossesRoutes from './routes/17_Losses.routes.js';
 import usersRoutes from './routes/18_Users.routes.js';
 import verificationCodesRoutes from './routes/19_VerificationCodes.routes.js'
 import authenticationsRoutes from './routes/21_Authentications.routes.js'
@@ -74,6 +75,7 @@ app.use('/api/v2', paymentRegistersRoutes);
 app.use('/api/v2', checkListsRoutes);
 app.use('/api/v2', checkListItemsRoutes);
 app.use('/api/v2', purchasesRoutes);
+app.use('/api/v2', lossesRoutes);
 app.use('/api/v2', usersRoutes);
 app.use('/api/v2', verificationCodesRoutes);
 app.use('/api/v2', authenticationsRoutes);
