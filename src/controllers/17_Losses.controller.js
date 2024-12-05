@@ -152,7 +152,7 @@ export const denyLossById = async(req, res) => {
             return;
         } else {
             const denniedLoss = await Promise.all(lossDetails.map(async(detail) =>{
-                const lossDetail = await LossDetail.findByPk(dataDetail);
+                const lossDetail = await LossDetail.findByPk(detail.id_loss);
                 const product = await Product.findByPk(lossDetail.id_product);
     
                 product.total_quantity += parseInt(lossDetail.quantity);
@@ -160,6 +160,7 @@ export const denyLossById = async(req, res) => {
                 return lossDetail;
             }))
             loss.setDataValue('lossDetails', denniedLoss);
+            await Losses.update({status : false},{where: {id_loss: id}})
         }
         
 
