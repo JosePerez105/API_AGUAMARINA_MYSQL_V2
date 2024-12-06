@@ -328,26 +328,27 @@ export const finalizeReservationById = async(req, res) => {
         let isFinalized;
         finalizedReservation <= 0 ? (isFinalized = false) : (isFinalized = true);
 
-        const lossCreated = await Loss.create({
-            id_user,
-            loss_date,
-            observations
-        });
-
-        const createdLossDetails = await Promise.all(lossesList.map(async(detail) =>{
-            const dataDetail = {
-                id_loss : lossCreated.id_loss,
-                id_product : detail.id_product,
-                quantity : detail.quantity
-            };
-            const createdDetail = await LossDetail.create(dataDetail);
-            const product = await Product.findByPk(dataDetail.id_product);
-
-            product.total_quantity -= parseInt(detail.quantity);
-            await product.save();
-            return createdDetail;
-        }))
-
+        if(lossesList) {
+            const lossCreated = await Loss.create({
+                id_user,
+                loss_date,
+                observations
+            });
+    
+            const createdLossDetails = await Promise.all(lossesList.map(async(detail) =>{
+                const dataDetail = {
+                    id_loss : lossCreated.id_loss,
+                    id_product : detail.id_product,
+                    quantity : detail.quantity
+                };
+                const createdDetail = await LossDetail.create(dataDetail);
+                const product = await Product.findByPk(dataDetail.id_product);
+    
+                product.total_quantity -= parseInt(detail.quantity);
+                await product.save();
+                return createdDetail;
+            }))
+        }
 
         res.status(200).json({
             ok : true,
@@ -355,7 +356,7 @@ export const finalizeReservationById = async(req, res) => {
             message : "Finalized Reservation",
             body : {
                 affectedRows : finalizedReservation,
-                lossDetails : createdLossDetails,
+                // lossDetails : createdLossDetails,
                 isFinalized
             }
         });
