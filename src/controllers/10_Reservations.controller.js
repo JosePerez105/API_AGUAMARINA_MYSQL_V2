@@ -1,6 +1,5 @@
 import Reservations from '../models/10_Reservation.model.js'
 import Details from '../models/11_ReservationDetail.model.js'
-import Products from '../models/7_Product.model.js';
 import sequelize from '../db/sequelize.js';
 import Address from '../models/5_Address.model.js';
 import City from "../models/4_City.model.js";
@@ -121,7 +120,7 @@ export const createReservation = async (req, res) => {
 
         // Crear los detalles de la reserva dentro de la transacción
         const detailsList = await Promise.all(details.map(async (detail) => {
-            const productDetail = await Products.findByPk(detail.id_product, { transaction });
+            const productDetail = await Product.findByPk(detail.id_product, { transaction });
 
             if (!productDetail) {
                 throw new Error(`Product with ID ${detail.id_product} not found`);
@@ -343,8 +342,7 @@ export const finalizeReservationById = async(req, res) => {
                 };
                 const createdDetail = await LossDetail.create(dataDetail);
                 const product = await Product.findByPk(dataDetail.id_product);
-    
-                product.total_quantity -= parseInt(detail.quantity);
+                product.total_quantity -= parseInt(dataDetail.quantity);
                 await product.save();
                 return createdDetail;
             }))
