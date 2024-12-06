@@ -321,7 +321,7 @@ export const finalizeReservationById = async(req, res) => {
     const {id_user, lossesList, observations, loss_date} = req.body; //{id_user, [{id_product, quantity}]}
 
     const newStatus = "Finalizada"
-
+    console.log({id_user, lossesList, observations, loss_date})
     try {
         const [finalizedReservation] = await Reservations.update({status : newStatus}, {where : {id_reservation : id}});
         let isFinalized;
@@ -341,9 +341,11 @@ export const finalizeReservationById = async(req, res) => {
                     quantity : detail.quantity
                 };
                 const createdDetail = await LossDetail.create(dataDetail);
-                const product = await Product.findByPk(dataDetail.id_product);
-                product.total_quantity -= parseInt(dataDetail.quantity);
+                const product = await Product.findByPk(detail.id_product);
+                console.log({product}, "antes")
+                product.total_quantity -= parseInt(detail.quantity);
                 await product.save();
+                console.log(product, "despues")
                 return createdDetail;
             }))
         }

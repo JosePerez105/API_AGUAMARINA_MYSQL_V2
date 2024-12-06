@@ -74,7 +74,6 @@ export const getProducts = async (req, res) => {
             } else {
                 prod.setDataValue('disponibility', disponibility);
             }
-            console.log(prod)
             return prod
         }));
 
@@ -161,7 +160,6 @@ export const getProductsCatalog = async(req, res) => {
             } else {
                 prod.setDataValue('disponibility', disponibility);
             }
-            console.log(prod)
             return prod
         }));
 

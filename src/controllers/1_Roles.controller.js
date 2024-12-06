@@ -1,6 +1,7 @@
 import Roles from "../models/1_Rol.model.js";
 import Permission from "../models/2_Permission.model.js";
 import RolPermissions from "../models/3_RolPermissions.model.js";
+import sequelize from '../db/sequelize.js';
 
 export const getRoles = async(req, res) => {
     try {
@@ -74,30 +75,74 @@ export const createRol = async(req, res) => {
     };
 };
 
-export const updateRolById = async(req, res) => {
-    const {id} = req.params;
-    const {name, description} = req.body;
+export const updateRolById = async (req, res) => {
+    const { id } = req.params;
+    const { name, description, permissions } = req.body;
+  
+    const transaction = await sequelize.transaction(); // Inicia una transacción
+  
     try {
-        const [updatedRol] = await Roles.update({name, description}, {where : {id_rol : id}});
-        let isUpdated;
-        updatedRol <= 0 ? (isUpdated = false) : (isUpdated = true);
-        res.status(200).json({
-            ok : true,
-            status : 200,
-            message : "Updated Rol",
-            body : {
-                affectedRows : updatedRol,
-                isUpdated
-            }
-        });
-    } catch(err) {
-        res.status(400).json({
-            ok : false,
-            status : 400,
-            err
-        });
+      // Actualizar detalles del rol
+      const [updatedRol] = await Roles.update(
+        { name, description },
+        { where: { id_rol: id }, transaction }
+      );
+  
+      if (updatedRol <= 0) {
+        throw new Error("Rol no encontrado o no actualizado");
+      }
+  
+      // Obtener permisos actuales del rol
+      const currentPermissions = await RolPermissions.findAll({
+        where: { id_rol: id },
+        attributes: ["id_permission"],
+        transaction,
+      });
+  
+      const currentPermissionIds = currentPermissions.map((perm) => perm.id_permission);
+  
+      // Identificar permisos a agregar y a eliminar
+      const permissionsToAdd = permissions.filter((perm) => !currentPermissionIds.includes(perm));
+      const permissionsToRemove = currentPermissionIds.filter((perm) => !permissions.includes(perm));
+  
+      // Agregar nuevos permisos
+      await Promise.all(
+        permissionsToAdd.map((perm) =>
+          RolPermissions.create({ id_rol: id, id_permission: perm }, { transaction })
+        )
+      );
+  
+      // Eliminar permisos no deseados
+      await RolPermissions.destroy({
+        where: { id_rol: id, id_permission: permissionsToRemove },
+        transaction,
+      });
+  
+      // Confirmar transacción
+      await transaction.commit();
+  
+      res.status(200).json({
+        ok: true,
+        status: 200,
+        message: "Updated Rol and Permissions",
+        body: {
+          updatedRol,
+          addedPermissions: permissionsToAdd,
+          removedPermissions: permissionsToRemove,
+        },
+      });
+    } catch (err) {
+      // Revertir cambios en caso de error
+      await transaction.rollback();
+  
+      res.status(400).json({
+        ok: false,
+        status: 400,
+        message: "Error updating Rol",
+        error: err.message,
+      });
     }
-};
+  };
 
 export const deleteRolById = async(req, res) => {
     const {id} = req.params;
