@@ -1,4 +1,5 @@
 import Reservations from '../models/10_Reservation.model.js'
+import ReservationDetail from '../models/11_ReservationDetail.model.js';
 import Details from '../models/11_ReservationDetail.model.js'
 import sequelize from '../db/sequelize.js';
 import Address from '../models/5_Address.model.js';
@@ -9,6 +10,8 @@ import User from '../models/18_User.model.js';
 import Loss from '../models/17_Loss.model.js';
 import LossDetail from '../models/17_5_LossDetail.model.js';
 import Product from '../models/7_Product.model.js';
+import { Op } from "sequelize";
+
 
 export const getReservations = async(req, res) => {
     const allReservations = await Reservations.findAll();
@@ -291,30 +294,151 @@ export const deleteReservationById = async(req, res) => {
     }
 };
 
-export const approveReservationById = async(req, res) => {
-    const {id} = req.params;
-    const newStatus = "Aprobada"
+// export const approveReservationById = async(req, res) => {
+//     const {id} = req.params;
+//     const newStatus = "Aprobada"
+//     try {
+//         const [approvedReservation] = await Reservations.update({status : newStatus}, {where : {id_reservation : id}});
+//         let isApproved;
+//         approvedReservation <= 0 ? (isApproved = false) : (isApproved = true);
+//         res.status(200).json({
+//             ok : true,
+//             status : 200,
+//             message : "Approved Reservation",
+//             body : {
+//                 affectedRows : approvedReservation,
+//                 isApproved
+//             }
+//         });
+//     } catch (err) {
+//         res.status(400).json({
+//             ok : false,
+//             status : 400,
+//             err
+//         });
+//     }
+// };
+
+
+
+export const approveReservationById = async (req, res) => {
+    const { id } = req.params;
+    const newStatus = "Aprobada";
+
     try {
-        const [approvedReservation] = await Reservations.update({status : newStatus}, {where : {id_reservation : id}});
-        let isApproved;
-        approvedReservation <= 0 ? (isApproved = false) : (isApproved = true);
-        res.status(200).json({
-            ok : true,
-            status : 200,
-            message : "Approved Reservation",
-            body : {
-                affectedRows : approvedReservation,
-                isApproved
+        // Buscar la reserva
+        const reservation = await Reservations.findByPk(id);
+        if (!reservation) {
+            return res.status(404).json({
+                ok: false,
+                status: 404,
+                message: "Reserva no encontrada.",
+            });
+        }
+
+        // Obtener los detalles de la reserva
+        const reservationDetails = await ReservationDetail.findAll({
+            where: { id_reservation: id },
+        });
+
+        if (!reservationDetails || reservationDetails.length === 0) {
+            return res.status(404).json({
+                ok: false,
+                status: 404,
+                message: "No se encontraron detalles para la reserva.",
+            });
+        }
+
+        // Obtener todos los productos involucrados en la reserva
+        const productIds = reservationDetails.map((detail) => detail.id_product);
+        const products = await Product.findAll({
+            where: { id_product: productIds },
+        });
+
+        // Verificar la disponibilidad de cada producto
+        let hasEnoughStock = true;
+
+        for (const detail of reservationDetails) {
+            const product = products.find((p) => p.id_product === detail.id_product);
+
+            if (!product) {
+                hasEnoughStock = false;
+                break;
             }
+
+            // Obtener todas las reservas aprobadas en el rango de fechas
+            const overlappingReservations = await Reservations.findAll({
+                where: {
+                    status: "Aprobada",
+                    [Op.and]: [
+                        { start_date: { [Op.lte]: reservation.end_date } },
+                        { end_date: { [Op.gte]: reservation.start_date } },
+                    ],
+                },
+            });
+
+            const overlappingReservationIds = overlappingReservations.map(
+                (res) => res.id_reservation
+            );
+
+            // Sumar las cantidades reservadas para el producto en las reservas coincidentes
+            const totalReserved = await ReservationDetail.sum("quantity", {
+                where: {
+                    id_product: product.id_product,
+                    id_reservation: overlappingReservationIds,
+                },
+            });
+
+            const availableStock = product.total_quantity - totalReserved;
+
+            if (availableStock < detail.quantity) {
+                hasEnoughStock = false;
+                break;
+            }
+        }
+
+        // Si no hay suficiente stock, retornar error
+        if (!hasEnoughStock) {
+            return res.status(400).json({
+                ok: false,
+                status: 400,
+                message: "No hay suficiente stock para aprobar esta reserva.",
+            });
+        }
+
+        // Aprobar la reserva
+        const [approvedReservation] = await Reservations.update(
+            { status: newStatus },
+            { where: { id_reservation: id } }
+        );
+
+        if (approvedReservation <= 0) {
+            return res.status(404).json({
+                ok: false,
+                status: 404,
+                message: "No se pudo encontrar la reserva para aprobar.",
+            });
+        }
+
+        res.status(200).json({
+            ok: true,
+            status: 200,
+            message: "Reserva aprobada exitosamente.",
+            body: {
+                affectedRows: approvedReservation,
+                reservationDetails,
+            },
         });
     } catch (err) {
-        res.status(400).json({
-            ok : false,
-            status : 400,
-            err
+        res.status(500).json({
+            ok: false,
+            status: 500,
+            message: "Error interno del servidor.",
+            err: err.message,
         });
     }
 };
+
 
 export const denyReservationById = async(req, res) => {
     const {id} = req.params;
