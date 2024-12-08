@@ -93,7 +93,7 @@ export const getReservationsByUser = async(req, res) => {
 };
 
 export const createReservation = async (req, res) => {
-    const { id_user, start_date, end_date, id_address, status= "En Espera", details = [] } = req.body;
+    const { id_user, start_date, end_date, id_address, status= "En Espera", shipping_cost = 0, deposit = 0, details = [] } = req.body;
 
     const transaction = await sequelize.transaction();
     const address = await Address.findByPk(id_address);
@@ -112,11 +112,15 @@ export const createReservation = async (req, res) => {
             city : city.name,
             neighborhood : address.neighborhood,
             reference : address.reference,
+            shipping_cost,
+            deposit,
             status
         }, { transaction });
 
         const id_reservation = createdReservation.id_reservation;
-        let total_reservation = 0;
+
+
+        let subtotal_reservations = 0;
 
         // Crear los detalles de la reserva dentro de la transacción
         const detailsList = await Promise.all(details.map(async (detail) => {
@@ -134,12 +138,15 @@ export const createReservation = async (req, res) => {
                 total_price: detail.quantity * productDetail.price
             }, { transaction });
 
-            total_reservation += parseFloat(createdDetail.total_price);
+            subtotal_reservations += parseFloat(createdDetail.total_price);
             return createdDetail;
         }));
 
+        let total_reservation = parseFloat(subtotal_reservations) + parseFloat(shipping_cost) + parseFloat(deposit);
+        
+
         // Actualizar el total de la reserva
-        await Reservations.update({ total_reservation }, { where: { id_reservation }, transaction });
+        await Reservations.update({ subtotal_reservations, total_reservation }, { where: { id_reservation }, transaction });
 
         // Confirmar la transacción
         await transaction.commit();
@@ -161,6 +168,80 @@ export const createReservation = async (req, res) => {
         });
     }
 };
+
+export const createReservationDashboard = async (req, res) => {
+    const { id_user, start_date, end_date, address, id_city, neighborhood, reference, status= "Aprobada", shipping_cost = 0, deposit = 0, details = [] } = req.body;
+
+    const transaction = await sequelize.transaction();
+
+    try {
+        const start = dayjs(start_date);
+        const end = dayjs(end_date);
+        const res_days = end.diff(start, "day") + 1 //Cantidad de dias de la duración de la reserva
+        const three_days_range = Math.ceil(res_days / 3) //Cobrar el valor cada 3 dias de alquiler
+        const city = await City.findByPk(id_city);
+        const createdReservation = await Reservations.create({
+            id_user,
+            start_date,
+            end_date,
+            address,
+            city : city.name,
+            neighborhood : neighborhood,
+            reference : reference,
+            shipping_cost,
+            deposit,
+            status
+        }, { transaction });
+
+        const id_reservation = createdReservation.id_reservation;
+        let subtotal_reservations = 0;
+
+        // Crear los detalles de la reserva dentro de la transacción
+        const detailsList = await Promise.all(details.map(async (detail) => {
+            const productDetail = await Product.findByPk(detail.id_product, { transaction });
+
+            if (!productDetail) {
+                throw new Error(`Product with ID ${detail.id_product} not found`);
+            }
+
+            const createdDetail = await Details.create({
+                id_reservation,
+                id_product: detail.id_product,
+                quantity: detail.quantity,
+                unit_price: productDetail.price,
+                total_price: detail.quantity * productDetail.price
+            }, { transaction });
+
+            subtotal_reservations += parseFloat(createdDetail.total_price);
+            return createdDetail;
+        }));
+
+        let total_reservation = parseFloat(subtotal_reservations) + parseFloat(shipping_cost) + parseFloat(deposit);
+
+        // Actualizar el total de la reserva
+        await Reservations.update({ subtotal_reservations, total_reservation }, { where: { id_reservation }, transaction });
+
+        // Confirmar la transacción
+        await transaction.commit();
+
+        // Enviar respuesta exitosa
+        res.status(201).json({
+            ok: true,
+            status: 201,
+            message: "Reservation created successfully",
+            body: { reservation: createdReservation, details: detailsList }
+        });
+    } catch (err) {
+        // Si hay un error, deshacer los cambios
+        await transaction.rollback();
+        res.status(400).json({
+            ok: false,
+            status: 400,
+            error: err.message || err
+        });
+    }
+};
+
 
 export const updateReservationById = async(req, res) => {
     const {id} = req.params;

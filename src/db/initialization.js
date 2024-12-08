@@ -94,6 +94,7 @@ if (cantidadPermissions.count <= 0) {
         {name : "Reservas", description : "Tiene permisos para acceder a las funciones de Reservas"}, //8
         {name : "Pagos y Comprobantes", description : "PTiene permisos para acceder a las funciones de Pagos y Comprobantes"}, //9
         {name : "Agenda", description : "Tiene permisos para acceder a las funciones de Agenda"}, //10
+        {name : "Municipios", description : "Tiene permisos para acceder a las funciones de Municipios"}, //11
     ];
     Permissions.map(async(per) => await Permission.create(per));
     console.log("Todos los Permisos Creados")

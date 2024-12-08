@@ -33,6 +33,17 @@ Reservation.init({
         type: DataTypes.STRING,
         allowNull: false
     },
+    subtotal_reservations: {
+        type: DataTypes.DECIMAL,
+    },
+    shipping_cost: {
+        type: DataTypes.DECIMAL,
+        allowNull: false
+    },
+    deposit: {
+        type: DataTypes.DECIMAL,
+        allowNull: false
+    },
     total_reservation: {
         type: DataTypes.DECIMAL,
     },
