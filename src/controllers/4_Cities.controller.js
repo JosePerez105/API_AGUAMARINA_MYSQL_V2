@@ -1,7 +1,20 @@
 import Cities from '../models/4_City.model.js'
+import Reservation from '../models/10_Reservation.model.js';
 
 export const getCities = async(req, res) => {
     const cities = await Cities.findAll();
+    const reservations = await Reservation.findAll();
+
+    cities.forEach((city) => {
+        const quantity = reservations.filter(
+            (reservation) =>
+                reservation.city === city.name &&
+                (reservation.status === "Aprobada" || reservation.status === "Finalizada")
+        ).length;
+
+        city.setDataValue('quantity', quantity);
+    });
+
     try {
         res.status(200).json({
             ok : true,
