@@ -88,54 +88,48 @@ export const getLossesByProduct = async(req, res) => {
 
 export const createLoss = async(req, res) => {
 
-    const {id_user, lossesList, observations, loss_date} = req.body; //{id_user, [{id_product, quantity}], observations, loss_date, status=true}
-    const transaction = await sequelize.transaction();
+    const {id_user, lossesList, observations, loss_date} = req.body; //{id_user, [{id_product, quantity}], observations, loss_date}
+
     try {
+
         const lossCreated = await Loss.create({
             id_user,
             loss_date,
             observations
-        }, { transaction });
-    
-        const createdLossDetails = await Promise.all(lossesList.map(async (detail) => {
+        });
+
+        const createdLossDetails = await Promise.all(lossesList.map(async(detail) =>{
             const dataDetail = {
-                id_loss: lossCreated.id_loss,
-                id_product: detail.id_product,
-                quantity: detail.quantity,
+                id_loss : lossCreated.id_loss,
+                id_product : detail.id_product,
+                quantity : detail.quantity
             };
-    
-            const createdDetail = await LossDetail.create(dataDetail, { transaction });
-    
-            const product = await Product.findByPk(dataDetail.id_product, { transaction });
-            if (!product) {
-                throw new Error(`Product with id ${dataDetail.id_product} not found`);
-            }
-    
+            const createdDetail = await LossDetail.create(dataDetail);
+            const product = await Product.findByPk(dataDetail.id_product);
+
             product.total_quantity -= parseInt(detail.quantity);
-            await product.save({ transaction });
-    
+            await product.save();
             return createdDetail;
-        }));
-    
-        await transaction.commit();
-    
+        }))
+        
         lossCreated.setDataValue('lossDetails', createdLossDetails);
-    
+
         res.status(201).json({
-            ok: true,
-            status: 201,
-            message: "Created Loss",
-            body: lossCreated,
+            ok : true,
+            status : 201,
+            message : "Created Loss",
+            body : lossCreated
         });
-    } catch (err) {
-        await transaction.rollback();
-        console.error(err);
+        return;
+        
+        
+    } catch(err) {
         res.status(400).json({
-            ok: false,
-            status: 400,
-            err: err.message,
+            ok : false,
+            status : 400,
+            err
         });
-    }
+    };
 };
 
 export const denyLossById = async(req, res) => {
