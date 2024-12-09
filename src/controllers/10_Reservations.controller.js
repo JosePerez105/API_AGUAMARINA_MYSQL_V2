@@ -553,59 +553,66 @@ export const annularReservationById = async(req, res) => {
 
 }
 
-export const finalizeReservationById = async(req, res) => {
-    const {id} = req.params;
-    const {id_user, lossesList, observations, loss_date} = req.body; //{id_user, [{id_product, quantity}]}
+export const finalizeReservationById = async (req, res) => {
+    const { id } = req.params;
+    const { id_user, lossesList = [], observations, loss_date } = req.body; //{id_user, [{id_product, quantity}]}
 
-    const newStatus = "Finalizada"
-    console.log({id_user, lossesList, observations, loss_date})
+    const newStatus = "Finalizada";
+    console.log({ id_user, lossesList, observations, loss_date });
+
     try {
-        const [finalizedReservation] = await Reservations.update({status : newStatus}, {where : {id_reservation : id}});
-        let isFinalized;
-        finalizedReservation <= 0 ? (isFinalized = false) : (isFinalized = true);
+        const [affectedRows] = await Reservations.update(
+            { status: newStatus },
+            { where: { id_reservation: id } }
+        );
 
-        if(lossesList) {
+        const isFinalized = affectedRows > 0;
+
+        if (lossesList.length > 0) {
             const lossCreated = await Loss.create({
                 id_user,
                 loss_date,
                 observations
             });
-    
-            const createdLossDetails = await Promise.all(lossesList.map(async(detail) =>{
-                const dataDetail = {
-                    id_loss : lossCreated.id_loss,
-                    id_product : detail.id_product,
-                    quantity : detail.quantity
-                };
-                const createdDetail = await LossDetail.create(dataDetail);
-                const product = await Product.findByPk(detail.id_product);
-                console.log({product}, "antes")
-                product.total_quantity -= parseInt(detail.quantity);
-                await product.save();
-                console.log(product, "despues")
-                return createdDetail;
-            }))
+
+            const createdLossDetails = await Promise.all(
+                lossesList.map(async (detail) => {
+                    const dataDetail = {
+                        id_loss: lossCreated.id_loss,
+                        id_product: detail.id_product,
+                        quantity: detail.quantity,
+                    };
+                    const createdDetail = await LossDetail.create(dataDetail);
+
+                    const product = await Product.findByPk(detail.id_product);
+                    console.log({ product }, "antes");
+
+                    product.total_quantity -= parseInt(detail.quantity);
+                    await product.save();
+
+                    console.log(product, "despues");
+                    return createdDetail;
+                })
+            );
         }
 
         res.status(200).json({
-            ok : true,
-            status : 200,
-            message : "Finalized Reservation",
-            body : {
-                affectedRows : finalizedReservation,
-                // lossDetails : createdLossDetails,
-                isFinalized
-            }
+            ok: true,
+            status: 200,
+            message: "Finalized Reservation",
+            body: {
+                affectedRows,
+                isFinalized,
+            },
         });
     } catch (err) {
         res.status(400).json({
-            ok : false,
-            status : 400,
-            err
+            ok: false,
+            status: 400,
+            err,
         });
     }
-
-}
+};
 
 export const sendMail = async(req,res) => {
     
