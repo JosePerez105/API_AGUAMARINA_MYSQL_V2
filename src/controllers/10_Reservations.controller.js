@@ -96,7 +96,7 @@ export const getReservationsByUser = async(req, res) => {
 };
 
 export const createReservation = async (req, res) => {
-    const { id_user, start_date, end_date, id_address, status= "En Espera", shipping_cost = 0, deposit = 0, details = [], type_payment } = req.body;
+    const { id_user, start_date, end_date, id_address, shipping_cost = 0, type_shipping, deposit = 0, type_payment, details = [], status= "En Espera", } = req.body;
 
     const transaction = await sequelize.transaction();
     const address = await Address.findByPk(id_address);
@@ -116,6 +116,7 @@ export const createReservation = async (req, res) => {
             neighborhood : address.neighborhood,
             reference : address.reference,
             shipping_cost,
+            type_shipping,
             deposit,
             type_payment,
             status
@@ -174,7 +175,21 @@ export const createReservation = async (req, res) => {
 };
 
 export const createReservationDashboard = async (req, res) => {
-    const { id_user, start_date, end_date, address, id_city, neighborhood, reference, status= "Aprobada", shipping_cost = 0, deposit = 0, details = [], type_payment } = req.body;
+    const { id_user, start_date, end_date, address, city, neighborhood, reference, shipping_cost = 0, type_shipping, deposit = 0, type_payment, details = [], status= "Aprobada",} = req.body;
+
+/*
+ 
+: 
+0
+type_payment
+: 
+"Transferencia"
+type_shipping
+: 
+"Recogida y Entrega"
+    
+    */
+
 
     const transaction = await sequelize.transaction();
 
@@ -183,16 +198,16 @@ export const createReservationDashboard = async (req, res) => {
         const end = dayjs(end_date);
         const res_days = end.diff(start, "day") + 1 //Cantidad de dias de la duración de la reserva
         const three_days_range = Math.ceil(res_days / 3) //Cobrar el valor cada 3 dias de alquiler
-        const city = await City.findByPk(id_city);
         const createdReservation = await Reservations.create({
             id_user,
             start_date,
             end_date,
             address,
-            city : city.name,
+            city,
             neighborhood : neighborhood,
             reference : reference,
             shipping_cost,
+            type_shipping,
             deposit,
             type_payment,
             status
