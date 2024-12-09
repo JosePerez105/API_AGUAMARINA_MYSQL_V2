@@ -25,6 +25,8 @@ import authenticationsRoutes from './routes/21_Authentications.routes.js';
 import cookieParser from 'cookie-parser';
 
 const app = express();
+app.options('*', cors()); // Permitir pre-solicitudes para todas las rutas
+
 
 const allowedOrigins = [
     'http://localhost:3000',
