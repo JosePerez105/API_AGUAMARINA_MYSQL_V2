@@ -4,7 +4,7 @@ import cors from 'cors';
 
 import rolesRoutes from './routes/1_Roles.routes.js';
 import permissionsRoutes from './routes/2_Permissions.routes.js';
-import rolePermissionsRoutes from './routes/3_RolPermissions.routes.js';
+import rolePermissionsRoutes from './routes/3_RolPermissions.routes.js'
 import citiesRoutes from './routes/4_Cities.routes.js';
 import addressesRoutes from './routes/5_Addresses.routes.js';
 import categoriesRoutes from './routes/6_Categories.routes.js';
@@ -20,13 +20,19 @@ import checkListItemsRoutes from './routes/15_CheckListItems.routes.js';
 import purchasesRoutes from './routes/16_Purchases.routes.js';
 import lossesRoutes from './routes/17_Losses.routes.js';
 import usersRoutes from './routes/18_Users.routes.js';
-import verificationCodesRoutes from './routes/19_VerificationCodes.routes.js';
-import authenticationsRoutes from './routes/21_Authentications.routes.js';
+import verificationCodesRoutes from './routes/19_VerificationCodes.routes.js'
+import authenticationsRoutes from './routes/21_Authentications.routes.js'
 import cookieParser from 'cookie-parser';
 
-const app = express();
-app.options('*', cors()); // Permitir pre-solicitudes para todas las rutas
 
+const app = express();
+
+app.options('/', (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Authorization, Content-Type");
+    res.header("Access-Control-Allow-Methods", "GET, HEAD, PUT, PATCH, POST, DELETE");
+    res.sendStatus(204);
+});
 
 const allowedOrigins = [
     'http://localhost:3000',
@@ -34,22 +40,27 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-    origin: allowedOrigins, // Especifica los orígenes permitidos
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        } else {
+        callback(new Error('Origen no permitido por CORS'));
+        }
+    },
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT'],
     allowedHeaders: ['Content-Type', 'Authorization', 'credentials'],
-    credentials: true // Habilita el envío de cookies o encabezados autorizados
+    credentials: true
 }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.use(cookieParser())
 app.use(morgan("dev"));
 
 app.get('/', (req, res) => {
-    res.json({ message: "This is AguaMarina's Api" });
+    res.json({message : "This is AguaMarina's Api"});
 });
 
-// Rutas
 app.use('/api/v2', rolesRoutes);
 app.use('/api/v2', permissionsRoutes);
 app.use('/api/v2', rolePermissionsRoutes);
