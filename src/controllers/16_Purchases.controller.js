@@ -1,8 +1,17 @@
 import Purchases from '../models/16_Purchase.model.js';
+import User from '../models/18_User.model.js';
 import Product from '../models/7_Product.model.js';
 
 export const getPurchases = async(req, res) => {
     const purchases = await Purchases.findAll();
+    const users = await User.findAll();
+    const products = await Product.findAll();
+    purchases.map((purch) => {
+        const user = users.find((u) => u.id_user === purch.id_user);
+        const product = products.find((p) => p.id_product === purch.id_product);
+        purch.setDataValue('product', product ? product.name : null);
+        purch.setDataValue('name_client', user ? `${user.names} ${user.lastnames}` : null);
+    });
     try {
         res.status(200).json({
             ok : true,
