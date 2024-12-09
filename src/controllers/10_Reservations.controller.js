@@ -357,12 +357,20 @@ export const approveReservationById = async (req, res) => {
 
         // Verificar la disponibilidad de cada producto
         let hasEnoughStock = true;
+        const failedProducts = []; // Array para almacenar los productos fallidos
 
         for (const detail of reservationDetails) {
             const product = products.find((p) => p.id_product === detail.id_product);
 
             if (!product) {
                 hasEnoughStock = false;
+                failedProducts.push({
+                    id_product: detail.id_product,
+                    name: "Producto no encontrado", // Si no se encuentra el producto
+                    quantity: detail.quantity,
+                    disponibility: 0,
+                    reason: "Producto no encontrado",
+                });
                 break;
             }
 
@@ -393,16 +401,23 @@ export const approveReservationById = async (req, res) => {
 
             if (availableStock < detail.quantity) {
                 hasEnoughStock = false;
-                break;
+                failedProducts.push({
+                    id_product: product.id_product,
+                    name: product.name, // Asumiendo que el producto tiene un campo 'name'
+                    quantity: detail.quantity,
+                    disponibility: availableStock,
+                    reason: "Stock insuficiente",
+                });
             }
         }
 
-        // Si no hay suficiente stock, retornar error
+        // Si no hay suficiente stock, retornar los productos fallidos
         if (!hasEnoughStock) {
             return res.status(400).json({
                 ok: false,
                 status: 400,
                 message: "No hay suficiente stock para aprobar esta reserva.",
+                failedProducts: failedProducts, // Devolver los productos fallidos
             });
         }
 
