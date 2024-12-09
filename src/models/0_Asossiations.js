@@ -9,6 +9,7 @@ import Category from "./6_Category.model.js";
 import Product from "./7_Product.model.js";
 import Image from "./8_Image.model.js";
 import Reservation from "./10_Reservation.model.js";
+import Voucher from "./10_5_Voucher.model.js";
 import ReservationDetail from "./11_ReservationDetail.model.js";
 import Rent from "./12_Rent.model.js";
 import PaymentRegister from "./13_PaymentRegister.model.js";
@@ -106,6 +107,16 @@ Reservation.hasMany(ReservationDetail, {
     as: "reservationDetails"
 });
 ReservationDetail.belongsTo(Reservation, {
+    foreignKey: "id_reservation",
+    as: "reservation"
+});
+
+// Relación entre Reservation y Voucher (Uno a Muchos)
+Reservation.hasMany(Voucher, {
+    foreignKey: "id_reservation",
+    as: "vouchers"
+});
+Voucher.belongsTo(Reservation, {
     foreignKey: "id_reservation",
     as: "reservation"
 });

@@ -10,6 +10,7 @@ import Category from "../models/6_Category.model.js";
 import Product from "../models/7_Product.model.js";
 import Image from "../models/8_Image.model.js";
 import Reservation from "../models/10_Reservation.model.js";
+import Voucher from "../models/10_5_Voucher.model.js";
 import ReservationDetail from "../models/11_ReservationDetail.model.js";
 import Rent from "../models/12_Rent.model.js";
 import PaymentRegister from "../models/13_PaymentRegister.model.js";
@@ -35,6 +36,7 @@ await Category.sync()
 await Product.sync()
 await Image.sync()
 await Reservation.sync()
+await Voucher.sync()
 await ReservationDetail.sync()
 await Rent.sync()
 await PaymentRegister.sync()
@@ -69,12 +71,12 @@ if (cantidadCiudades.count <= 0) {
         {name: "Llano Grande"}, //10
         {name: "Guatapé"}, //
         {name: "La Unión"}, //12
-        {name : "Caldas"}, //13
-        {name : "San Cristóbal"}, //14
-        {name : "San Félix"}, //15
-        {name : "San Antonio de Prado"}, //16
-        {name : "Guarne"}, //17
-        {name : "Marinilla"}, //18
+        {name: "Caldas"}, //13
+        {name: "San Cristóbal"}, //14
+        {name: "San Félix"}, //15
+        {name: "San Antonio de Prado"}, //16
+        {name: "Guarne"}, //17
+        {name: "Marinilla"}, //18
     ]
     Cities.map(async(city) => await City.create(city));
     console.log("Todas las Ciudades Creadas")
@@ -92,9 +94,8 @@ if (cantidadPermissions.count <= 0) {
         {name : "Entradas", description : "Tiene permisos para acceder a las funciones de Entradas de Productos"}, //6
         {name : "Perdidas", description : "Tiene permisos para acceder a las funciones de Perdidas de Productos"}, //7
         {name : "Reservas", description : "Tiene permisos para acceder a las funciones de Reservas"}, //8
-        {name : "Pagos y Comprobantes", description : "PTiene permisos para acceder a las funciones de Pagos y Comprobantes"}, //9
-        {name : "Agenda", description : "Tiene permisos para acceder a las funciones de Agenda"}, //10
-        {name : "Municipios", description : "Tiene permisos para acceder a las funciones de Municipios"}, //11
+        {name : "Agenda", description : "Tiene permisos para acceder a las funciones de Agenda"}, //9
+        {name : "Municipios", description : "Tiene permisos para acceder a las funciones de Municipios"}, //10
     ];
     Permissions.map(async(per) => await Permission.create(per));
     console.log("Todos los Permisos Creados")
