@@ -40,12 +40,20 @@ Reservation.init({
         type: DataTypes.DECIMAL,
         allowNull: false
     },
+    type_shipping: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     deposit: {
         type: DataTypes.DECIMAL,
         allowNull: false
     },
     total_reservation: {
         type: DataTypes.DECIMAL,
+    },
+    type_payment: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
     cancel_reason: {
         type: DataTypes.STRING,

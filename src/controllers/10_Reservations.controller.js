@@ -96,7 +96,7 @@ export const getReservationsByUser = async(req, res) => {
 };
 
 export const createReservation = async (req, res) => {
-    const { id_user, start_date, end_date, id_address, status= "En Espera", shipping_cost = 0, deposit = 0, details = [] } = req.body;
+    const { id_user, start_date, end_date, id_address, status= "En Espera", shipping_cost = 0, deposit = 0, details = [], type_payment } = req.body;
 
     const transaction = await sequelize.transaction();
     const address = await Address.findByPk(id_address);
@@ -117,6 +117,7 @@ export const createReservation = async (req, res) => {
             reference : address.reference,
             shipping_cost,
             deposit,
+            type_payment,
             status
         }, { transaction });
 
@@ -173,7 +174,7 @@ export const createReservation = async (req, res) => {
 };
 
 export const createReservationDashboard = async (req, res) => {
-    const { id_user, start_date, end_date, address, id_city, neighborhood, reference, status= "Aprobada", shipping_cost = 0, deposit = 0, details = [] } = req.body;
+    const { id_user, start_date, end_date, address, id_city, neighborhood, reference, status= "Aprobada", shipping_cost = 0, deposit = 0, details = [], type_payment } = req.body;
 
     const transaction = await sequelize.transaction();
 
@@ -193,6 +194,7 @@ export const createReservationDashboard = async (req, res) => {
             reference : reference,
             shipping_cost,
             deposit,
+            type_payment,
             status
         }, { transaction });
 
